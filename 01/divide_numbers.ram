@@ -1,0 +1,35 @@
+<input> 67 13
+    read 1	    ; r1 - делимое
+    read 2	    ; r2 - делитель
+    load =0
+    store 3     ; r3 - частное (=0)
+    store 4     ; r4 - остаток (=0)
+
+loop:
+    load 1
+    jz exit     ; если делимое равно нулю, выходим
+
+    load 2
+    sub 1
+    jgtz store_remainder   ; if (делитель > делимое), сохраняем делимое в остаток и выходим
+
+    load 1
+    sub 2
+    store 1 	; сохраняем результат вычитания
+
+    load 3
+    add =1
+    store 3     ; инкрементируем частное
+
+    jmp loop
+
+store_remainder:
+    load 1
+    store 4
+    jmp exit
+
+exit:
+    write 3
+    write 4
+
+halt
