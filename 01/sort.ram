@@ -1,77 +1,74 @@
-;<input> 5 6 7 1 3 6
+;<input> 5 6 7 1 4 6
 ;<input> 5 1 2 3 4 5
-<input> 5 15 14 13 12 11
-    read 1          ; r1 -> N
-    load =0;
-    store 2         ; r2 -> i = 0
-    store 3         ; r3 -> k = 0
+<input> 5 5 4 3 2 1
+    read 1          ; r1 -> количество данных
 
 read:
     load =10;
-    store 4;        ; r4 -> указатель на ячейку для записи массива;
+    store 2;        ; r2 -> указатель на ячейку для записи массива;
                     ; в регистрах начиная c 10 размещается входящий массив
                     ; все регистры до 10 отводятся под служебные переменные
     jmp read_loop
 
 read_loop:
     load 1
-    sub 4
+    sub 2
     add =10
-    jz sort     ; конец ввода, приступаем к сортировке
+    jz sort         ; конец ввода, приступаем к сортировке
 
-    read *4         ; новое число записывается по адресу из r4
+    read *2         ; новое число записывается по адресу из r2
 
-    load 4
+    load 2
     add =1
-    store 4         ; r4 += 1
+    store 2         ; r2 += 1
     jmp read_loop
 
 sort:
     load =10
-    store 2         ; i = адрес начала массива
+    store 3         ; r3 -> i = адрес начала массива
     jmp outer_loop
 
 outer_loop:
-    load 4
-    sub 2
+    load 2
+    sub 3
     jz print        ; if (i == конец массива) break
 
-    load 2
+    load 3
     add =1
-    store 3         ; r3 -> k = i + 1
+    store 4         ; r4 -> k = i + 1
 
     jmp inner_loop
 
 increment_i:
-    load 2
+    load 3
     add =1
-    store 2
+    store 3
     jmp outer_loop
 
 inner_loop:
-    load 4
-    sub 3
+    load 2
+    sub 4
     jz increment_i  ; if (k == конец массива) break
 
-    load *2
-    sub *3
+    load *3
+    sub *4
     jgtz swap       ; if (a[i] > a[k]) swap(a[i], a[k])
 
     jmp increment_k
 
 increment_k:
-    load 3
+    load 4
     add =1
-    store 3
+    store 4
     jmp inner_loop
 
 swap:
-    load *2
-    store 5         ; r5 = a[i]
     load *3
-    store *2        ; a[i] = a[k]
+    store 5         ; r5 = a[i]
+    load *4
+    store *3        ; a[i] = a[k]
     load 5
-    store *3        ; a[k] = r5
+    store *4        ; a[k] = r5
 
     jmp increment_k
 
@@ -81,7 +78,7 @@ print:
     jmp print_loop
 
 print_loop:
-    load 4
+    load 2
     sub 6
     jz exit         ; достигнут конец массива
 
