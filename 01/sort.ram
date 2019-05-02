@@ -1,7 +1,5 @@
-<input> 5 6 7 6 1 2
-
+<input> 5 15 14 13 12 11
     read 1          ; r1 -> N
-
     load =0;
     store 2         ; r2 -> i = 0
     store 3         ; r3 -> k = 0
@@ -9,7 +7,7 @@
 
 outer_loop:
     load 1
-    sub 3
+    sub 2
     jz print        ; if (i == n) break
 
     load 2
@@ -54,6 +52,7 @@ swap:
 print:
     load =0
     store 5         ; r5 -> счётчик в input tape
+    jmp print_loop
 
 print_loop:
     load 1
