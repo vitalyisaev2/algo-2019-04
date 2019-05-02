@@ -1,14 +1,40 @@
+;<input> 5 6 7 1 3 6
+;<input> 5 1 2 3 4 5
 <input> 5 15 14 13 12 11
     read 1          ; r1 -> N
     load =0;
     store 2         ; r2 -> i = 0
     store 3         ; r3 -> k = 0
+
+read:
+    load =10;
+    store 4;        ; r4 -> указатель на ячейку для записи массива;
+                    ; в регистрах начиная c 10 размещается входящий массив
+                    ; все регистры до 10 отводятся под служебные переменные
+    jmp read_loop
+
+read_loop:
+    load 1
+    sub 4
+    add =10
+    jz sort     ; конец ввода, приступаем к сортировке
+
+    read *4         ; новое число записывается по адресу из r4
+
+    load 4
+    add =1
+    store 4         ; r4 += 1
+    jmp read_loop
+
+sort:
+    load =10
+    store 2         ; i = адрес начала массива
     jmp outer_loop
 
 outer_loop:
-    load 1
+    load 4
     sub 2
-    jz print        ; if (i == n) break
+    jz print        ; if (i == конец массива) break
 
     load 2
     add =1
@@ -23,9 +49,9 @@ increment_i:
     jmp outer_loop
 
 inner_loop:
-    load 1
+    load 4
     sub 3
-    jz increment_i  ; if (k == n) break
+    jz increment_i  ; if (k == конец массива) break
 
     load *2
     sub *3
@@ -41,30 +67,29 @@ increment_k:
 
 swap:
     load *2
-    store 4         ; r4 = a[i]
+    store 5         ; r5 = a[i]
     load *3
     store *2        ; a[i] = a[k]
-    load 4
-    store *3        ; a[k] = r4
+    load 5
+    store *3        ; a[k] = r5
 
     jmp increment_k
 
 print:
-    load =0
-    store 5         ; r5 -> счётчик в input tape
+    load =10
+    store 6         ; r6 -> указатель для распечатки итогового массива
     jmp print_loop
 
 print_loop:
-    load 1
-    sub 5
-    jz exit
+    load 4
+    sub 6
+    jz exit         ; достигнут конец массива
 
-    read 6          ; 
-    write 6
+    write *6
 
-    load 5
+    load 6
     add =1
-    store 5         ; r5 += 1
+    store 6         ; r6 += 1
     jmp print_loop
 
 exit:
