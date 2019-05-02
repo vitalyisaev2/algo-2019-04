@@ -1,0 +1,72 @@
+<input> 5 6 7 6 1 2
+
+    read 1          ; r1 -> N
+
+    load =0;
+    store 2         ; r2 -> i = 0
+    store 3         ; r3 -> k = 0
+    jmp outer_loop
+
+outer_loop:
+    load 1
+    sub 3
+    jz print        ; if (i == n) break
+
+    load 2
+    add =1
+    store 3         ; r3 -> k = i + 1
+
+    jmp inner_loop
+
+increment_i:
+    load 2
+    add =1
+    store 2
+    jmp outer_loop
+
+inner_loop:
+    load 1
+    sub 3
+    jz increment_i  ; if (k == n) break
+
+    load *2
+    sub *3
+    jgtz swap       ; if (a[i] > a[k]) swap(a[i], a[k])
+
+    jmp increment_k
+
+increment_k:
+    load 3
+    add =1
+    store 3
+    jmp inner_loop
+
+swap:
+    load *2
+    store 4         ; r4 = a[i]
+    load *3
+    store *2        ; a[i] = a[k]
+    load 4
+    store *3        ; a[k] = r4
+
+    jmp increment_k
+
+print:
+    load =0
+    store 5         ; r5 -> счётчик в input tape
+
+print_loop:
+    load 1
+    sub 5
+    jz exit
+
+    read 6          ; 
+    write 6
+
+    load 5
+    add =1
+    store 5         ; r5 += 1
+    jmp print_loop
+
+exit:
+    halt
