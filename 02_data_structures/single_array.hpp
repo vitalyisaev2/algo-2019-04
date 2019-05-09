@@ -5,21 +5,29 @@
 #include <algorithm>
 #include <iterator>
 
+template <typename T> copyPointerArray(T* from, T** to, size_t num);
+
 template <typename T>
-class SingleArray : public DynamicArray
+class SingleArray : public DynamicArray<T>
 {
   public:
-    SingleArray() : array_(new T[0]), size(0){};
+    SingleArray() : array_(new T[0]), size_(0){};
 
-    virtual void add(T item) override
+    ~SingleArray() {
+        if (array_ != nullptr) {
+            delete array_;
+        }
+    }
+
+    void add(T item) override
     {
-        resizeWithShiftRight(size);
-        array_[size - 1] = item;
+        resizeWithShiftRight(size_);
+        array_[size_ - 1] = item;
     };
 
-    virtual void add(T item, size_t index) override
+   void add(T item, size_t index) override
     {
-        if (index > size)
+        if (index > size_)
             {
                 throw "index value to big when trying to add value to single array";
             }
@@ -34,7 +42,7 @@ class SingleArray : public DynamicArray
 
     virtual T remove(size_t index) override
     {
-        if (index > size)
+        if (index > size_)
             {
                 throw "index value to big when trying to remove value from single array";
             }
@@ -61,7 +69,8 @@ class SingleArray : public DynamicArray
         {
             auto old_begin = std::begin(old);
             auto old_end   = std::advance(std::begin(old), from);
-            auto new_begin = std::begin(array_) std::copy(old_begin, old_end, new_begin);
+            auto new_begin = std::begin(array_);
+            std::copy(old_begin, old_end, new_begin);
         }
         // при необходимости копируется хвост массива
         if (from < size_)
@@ -91,6 +100,15 @@ class SingleArray : public DynamicArray
                 throw "shift point must not be greater than size";
             }
 
+        // если в массиве ничего не осталось, зануляем указатель
+        if (size == 1) {
+            delete[] array_;
+            array_ = nullptr;
+            size = 0;
+            return;
+        }
+        
+
         auto old = array_;
         array_   = new T[size - 1];
         // при необходимости копируется голова массива
@@ -109,10 +127,10 @@ class SingleArray : public DynamicArray
             std::copy(old_begin, old_end, new_begin);
         }
         delete[] old;
-        size_++;
+        size_--;
     };
 
-    T*     array_;
+    T*     array;
     size_t size_;
 };
 

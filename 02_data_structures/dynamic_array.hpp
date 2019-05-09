@@ -17,6 +17,8 @@ class DynamicArray
     virtual T      remove(size_t index) = 0;
     // возвращает актуальный размер массива 
     virtual size_t size() const = 0;
+    // виртуальный деструктор
+    virtual ~DynamicArray() = 0;
 };
 
 #endif
