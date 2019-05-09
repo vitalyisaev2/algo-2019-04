@@ -2,13 +2,15 @@ cmake_minimum_required(VERSION 3.0)
 project(algo-2019-04)
 enable_testing()
 
-# составляет список подпапок 
+# составляет список подпапок с исходниками в проекте
 MACRO(SUBDIRLIST result curdir)
   FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
   SET(dirlist "")
   FOREACH(child ${children})
     IF(IS_DIRECTORY ${curdir}/${child})
-      LIST(APPEND dirlist ${curdir}/${child})
+      IF(${child} MATCHES "[0-9]+.*")
+        LIST(APPEND dirlist ${curdir}/${child})
+      ENDIF()
     ENDIF()
   ENDFOREACH()
   SET(${result} ${dirlist})

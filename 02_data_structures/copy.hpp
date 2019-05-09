@@ -1,11 +1,14 @@
 #ifndef COPY_HPP
 #define COPY_HPP
 
-#include<cstddef>
+#include <cstddef>
 
-//
-template <typename T> void copyPointerArray(T* from, T** to, size_t num) {
-
+template <typename T>
+void copyPointerArray(T* from, T* to, size_t num)
+{
+    while (num--) {
+        *to++ = *from++;
+    }
 }
 
 #endif
