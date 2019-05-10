@@ -23,7 +23,7 @@ class DynamicArray
     virtual size_t size() const = 0;
 
     // оператор сравнения важен в юнит-тестах
-    bool operator==(const DynamicArray& other)
+    bool operator==(const DynamicArray& other) const
     {
         if (this->size() != other.size()) {
             return false;

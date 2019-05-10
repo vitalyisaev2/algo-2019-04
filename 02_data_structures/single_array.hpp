@@ -35,6 +35,9 @@ class SingleArray : public DynamicArray<T>
 
     virtual T get(size_t index) const override
     {
+        if (index > size_) {
+            throw "index value to big when trying to get value frome single array";
+        }
         return array_[index];
     };
 
