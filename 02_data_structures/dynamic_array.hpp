@@ -2,6 +2,7 @@
 #define DYNAMIC_ARRAY_HPP
 
 #include <cstddef>
+#include <ostream>
 
 template <typename T>
 class DynamicArray
@@ -28,7 +29,7 @@ class DynamicArray
         if (this->size() != other.size()) {
             return false;
         }
-        for (size_t i = 0; i < other.size(); ++i) {
+        for (size_t i = 0; i < other.size(); i++) {
             if (this->get(i) != other.get(i)) {
                 return false;
             }
@@ -38,5 +39,18 @@ class DynamicArray
 
     virtual ~DynamicArray(){};
 };
+
+// распечатка массива в поток
+template <typename T>
+std::ostream& operator<<(std::ostream& out, const DynamicArray<T>& array)
+{
+    for (size_t i = 0; i < array.size(); i++) {
+        out << array.get(i);
+        if (i != array.size() - 1) {
+            out << " ";
+        }
+    }
+    return out;
+}
 
 #endif

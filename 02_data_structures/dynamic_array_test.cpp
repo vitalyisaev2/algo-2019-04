@@ -1,8 +1,10 @@
 #include "dynamic_array.hpp"
 #include "single_array.hpp"
+#include "vector_array.hpp"
 #include <catch2/catch.hpp>
+#include <iostream>
 
-TEMPLATE_TEST_CASE("DynamicArray operations", "[DynamicArray][template]", (SingleArray<int>))
+TEMPLATE_TEST_CASE("DynamicArray operations", "[DynamicArray][template]", SingleArray<int>, VectorArray<int>)
 {
     SECTION("simple CRUD operations")
     {
@@ -53,9 +55,6 @@ TEMPLATE_TEST_CASE("DynamicArray operations", "[DynamicArray][template]", (Singl
         expected.add(2);
 
         REQUIRE(array == expected);
-
-        delete array;
-        delete expected;
     }
 
     SECTION("add to back")
@@ -73,9 +72,6 @@ TEMPLATE_TEST_CASE("DynamicArray operations", "[DynamicArray][template]", (Singl
         expected.add(3);
 
         REQUIRE(array == expected);
-
-        delete array;
-        delete expected;
     }
 
     SECTION("remove from front")
@@ -93,9 +89,6 @@ TEMPLATE_TEST_CASE("DynamicArray operations", "[DynamicArray][template]", (Singl
         expected.add(3);
 
         REQUIRE(array == expected);
-
-        delete array;
-        delete expected;
     }
 
     SECTION("remove from middle")
@@ -113,9 +106,6 @@ TEMPLATE_TEST_CASE("DynamicArray operations", "[DynamicArray][template]", (Singl
         expected.add(3);
 
         REQUIRE(array == expected);
-
-        delete array;
-        delete expected;
     }
 
     SECTION("remove from back")
@@ -133,8 +123,5 @@ TEMPLATE_TEST_CASE("DynamicArray operations", "[DynamicArray][template]", (Singl
         expected.add(2);
 
         REQUIRE(array == expected);
-
-        delete array;
-        delete expected;
     }
 }

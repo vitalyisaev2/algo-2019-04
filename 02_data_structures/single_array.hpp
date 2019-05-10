@@ -1,8 +1,8 @@
 #ifndef SINGLE_ARRAY_HPP
 #define SINGLE_ARRAY_HPP
 
-#include "copy.hpp"
 #include "dynamic_array.hpp"
+#include "utils.hpp"
 #include <iostream>
 
 template <typename T>
@@ -33,7 +33,7 @@ class SingleArray : public DynamicArray<T>
         array_[index] = item;
     };
 
-    virtual T get(size_t index) const override
+    T get(size_t index) const override
     {
         if (index > size_) {
             throw "index value to big when trying to get value frome single array";
@@ -41,7 +41,7 @@ class SingleArray : public DynamicArray<T>
         return array_[index];
     };
 
-    virtual T remove(size_t index) override
+    T remove(size_t index) override
     {
         if (index > size_) {
             throw "index value to big when trying to remove value from single array";
@@ -51,13 +51,12 @@ class SingleArray : public DynamicArray<T>
         return value;
     };
 
-    virtual size_t size() const
+    size_t size() const override
     {
         return size_;
     };
 
   private:
-
     // resizeWithShiftRight создаёт новый массив большей длины
     // и копирует старый массив в новый, после чего удаляет старый;
     // from указывает на индекс свободной ячейки, начиная с которой
