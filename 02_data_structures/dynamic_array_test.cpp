@@ -1,10 +1,11 @@
 #include "dynamic_array.hpp"
+#include "factor_array.hpp"
 #include "single_array.hpp"
 #include "vector_array.hpp"
 #include <catch2/catch.hpp>
 #include <iostream>
 
-TEMPLATE_TEST_CASE("DynamicArray operations", "[DynamicArray][template]", SingleArray<int>, VectorArray<int>)
+TEMPLATE_TEST_CASE("DynamicArray operations", "[DynamicArray][template]", SingleArray<int>, VectorArray<int>, FactorArray<int>)
 {
     SECTION("simple CRUD operations")
     {

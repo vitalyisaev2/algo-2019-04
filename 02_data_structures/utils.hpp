@@ -30,4 +30,9 @@ void shiftPointerArrayLeft(T* from, size_t length)
     }
 }
 
+enum ResizeMode {
+    Grow,
+    Shrink,
+};
+
 #endif
