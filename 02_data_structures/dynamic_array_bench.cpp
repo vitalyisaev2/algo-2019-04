@@ -1,10 +1,11 @@
 #include "factor_array.hpp"
 #include "matrix_array.hpp"
 #include "single_array.hpp"
+#include "std_vector_array.hpp"
 #include "vector_array.hpp"
 #include <benchmark/benchmark.h>
 
-const int iterations = 2 << 10;
+const int iterations = 2 << 13;
 
 template <typename T>
 static void addFront(benchmark::State& state, DynamicArray<T>* array)
@@ -58,6 +59,20 @@ static void removeBack(benchmark::State& state, DynamicArray<T>* array)
     }
 }
 
+template <typename T>
+static void get(benchmark::State& state, DynamicArray<T>* array)
+{
+    for (auto i = 0; i < iterations; i++) {
+        array->add(i);
+    }
+    T val;
+    for (auto _ : state) {
+        for (auto i = 0; i < iterations; i++) {
+            val = array->get(size_t(i));
+        }
+    }
+}
+
 // add front
 
 static void BM_SingleArray_Add_Front(benchmark::State& state)
@@ -81,6 +96,12 @@ static void BM_FactorArray_Add_Front(benchmark::State& state)
 static void BM_MatrixArray_Add_Front(benchmark::State& state)
 {
     MatrixArray<int> array(static_cast<size_t>(state.range(0)));
+    addFront<int>(state, &array);
+}
+
+static void BM_StdVectorArray_Add_Front(benchmark::State& state)
+{
+    StdVectorArray<int> array;
     addFront<int>(state, &array);
 }
 
@@ -110,6 +131,12 @@ static void BM_MatrixArray_Add_Back(benchmark::State& state)
     addBack<int>(state, &array);
 }
 
+static void BM_StdVectorArray_Add_Back(benchmark::State& state)
+{
+    StdVectorArray<int> array;
+    addBack<int>(state, &array);
+}
+
 // remove front
 
 static void BM_SingleArray_Remove_Front(benchmark::State& state)
@@ -127,6 +154,18 @@ static void BM_VectorArray_Remove_Front(benchmark::State& state)
 static void BM_FactorArray_Remove_Front(benchmark::State& state)
 {
     FactorArray<int> array;
+    removeFront<int>(state, &array);
+}
+
+static void BM_MatrixArray_Remove_Front(benchmark::State& state)
+{
+    MatrixArray<int> array(static_cast<size_t>(state.range(0)));
+    removeFront<int>(state, &array);
+}
+
+static void BM_StdVectorArray_Remove_Front(benchmark::State& state)
+{
+    StdVectorArray<int> array;
     removeFront<int>(state, &array);
 }
 
@@ -150,17 +189,72 @@ static void BM_FactorArray_Remove_Back(benchmark::State& state)
     removeBack<int>(state, &array);
 }
 
+static void BM_MatrixArray_Remove_Back(benchmark::State& state)
+{
+    MatrixArray<int> array(static_cast<size_t>(state.range(0)));
+    removeBack<int>(state, &array);
+}
+
+static void BM_StdVectorArray_Remove_Back(benchmark::State& state)
+{
+    StdVectorArray<int> array;
+    removeBack<int>(state, &array);
+}
+
+// get
+
+static void BM_SingleArray_Get(benchmark::State& state)
+{
+    SingleArray<int> array;
+    get<int>(state, &array);
+}
+
+static void BM_VectorArray_Get(benchmark::State& state)
+{
+    VectorArray<int> array(static_cast<size_t>(state.range(0)));
+    get<int>(state, &array);
+}
+
+static void BM_FactorArray_Get(benchmark::State& state)
+{
+    FactorArray<int> array;
+    get<int>(state, &array);
+}
+
+static void BM_MatrixArray_Get(benchmark::State& state)
+{
+    MatrixArray<int> array(static_cast<size_t>(state.range(0)));
+    get<int>(state, &array);
+}
+
+static void BM_StdVectorArray_Get(benchmark::State& state)
+{
+    StdVectorArray<int> array;
+    get<int>(state, &array);
+}
+
 BENCHMARK(BM_SingleArray_Add_Front);
-BENCHMARK(BM_VectorArray_Add_Front)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10);
+BENCHMARK(BM_VectorArray_Add_Front)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
 BENCHMARK(BM_FactorArray_Add_Front);
-BENCHMARK(BM_MatrixArray_Add_Front)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10);
+BENCHMARK(BM_StdVectorArray_Add_Front);
+BENCHMARK(BM_MatrixArray_Add_Front)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
 BENCHMARK(BM_SingleArray_Add_Back);
-BENCHMARK(BM_VectorArray_Add_Back)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10);
+BENCHMARK(BM_VectorArray_Add_Back)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
 BENCHMARK(BM_FactorArray_Add_Back);
-BENCHMARK(BM_MatrixArray_Add_Back)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10);
+BENCHMARK(BM_StdVectorArray_Add_Back);
+BENCHMARK(BM_MatrixArray_Add_Back)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
 BENCHMARK(BM_SingleArray_Remove_Front);
-BENCHMARK(BM_VectorArray_Remove_Front)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10);
+BENCHMARK(BM_VectorArray_Remove_Front)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
 BENCHMARK(BM_FactorArray_Remove_Front);
+BENCHMARK(BM_StdVectorArray_Remove_Front);
+BENCHMARK(BM_MatrixArray_Remove_Front)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
 BENCHMARK(BM_SingleArray_Remove_Back);
-BENCHMARK(BM_VectorArray_Remove_Back)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10);
+BENCHMARK(BM_VectorArray_Remove_Back)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
 BENCHMARK(BM_FactorArray_Remove_Back);
+BENCHMARK(BM_StdVectorArray_Remove_Back);
+BENCHMARK(BM_MatrixArray_Remove_Back)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
+BENCHMARK(BM_SingleArray_Get);
+BENCHMARK(BM_VectorArray_Get)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
+BENCHMARK(BM_FactorArray_Get);
+BENCHMARK(BM_StdVectorArray_Get);
+BENCHMARK(BM_MatrixArray_Get)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
