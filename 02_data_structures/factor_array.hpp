@@ -2,12 +2,13 @@
 #define FACTOR_ARRAY_HPP
 
 #include "preallocated_array.hpp"
+#include <iostream>
 
 template <typename T>
 class FactorArray : public PreallocatedArray<T>
 {
   public:
-    FactorArray() : PreallocatedArray<T>(1), factor_(2) {}
+    FactorArray() : PreallocatedArray<T>(), factor_(2) {}
 
   protected:
     bool mustGrow() const override
@@ -23,19 +24,30 @@ class FactorArray : public PreallocatedArray<T>
     // resize увеличивает или снижает размер внутреннего массива на постоянное число (step_) элементов
     void resize(ResizeMode mode) override
     {
-        auto old_ = this->array_;
         switch (mode) {
         case Grow:
-            this->array_ = new T[this->capacity_ *= this->factor_];
+            if (this->capacity_ == 0) {
+                this->capacity_ = 1;
+            } else {
+                this->capacity_ *= this->factor_;
+            }
             break;
         case Shrink:
-            this->array_ = new T[this->capacity_ /= this->factor_];
+            if (this->capacity_ == 0) {
+                throw "zero capacity reached, cannot shrink more";
+            } else {
+                this->capacity_ /= this->factor_;
+            }
             break;
         default:
             throw "unexpected resize mode";
         }
+        auto old_ = this->array_;
+        this->array_ = new T[this->capacity_];
         copyPointerArray<T>(old_, this->array_, this->size_);
-        delete[] old_;
+        if (old_ != nullptr) {
+            delete[] old_;
+        }
     }
 
   private:
