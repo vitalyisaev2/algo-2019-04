@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <ostream>
 
+// интерфейс динамического массива
 template <typename T>
 class DynamicArray
 {

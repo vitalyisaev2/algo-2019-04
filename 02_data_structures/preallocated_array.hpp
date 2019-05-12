@@ -3,6 +3,7 @@
 
 #include "dynamic_array.hpp"
 #include "utils.hpp"
+#include <sstream>
 
 // абстрактный класс динамического массива, который оптимизирует количество аллокаций
 template <typename T>
@@ -45,12 +46,19 @@ class PreallocatedArray : public DynamicArray<T>
     // извлекает элемент массива по индексу
     T get(size_t index) const override
     {
+        if (index >= size_) {
+            throw invalidIndexNumber(size_, index);
+        }
         return array_[index];
     }
 
     // удаляет элемент массива со сдвигом хвоста массива влево
     T remove(size_t index) override
     {
+        if (index >= size_) {
+            throw invalidIndexNumber(size_, index);
+        }
+
         T item = array_[index];
         shiftPointerArrayLeft<T>(array_ + index, size_ - index - 1);
         size_--;

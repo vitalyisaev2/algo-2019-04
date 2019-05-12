@@ -35,16 +35,16 @@ class SingleArray : public DynamicArray<T>
 
     T get(size_t index) const override
     {
-        if (index > size_) {
-            throw "index value to big when trying to get value frome single array";
+        if (index >= size_) {
+            throw invalidIndexNumber(size_, index);
         }
         return array_[index];
     };
 
     T remove(size_t index) override
     {
-        if (index > size_) {
-            throw "index value to big when trying to remove value from single array";
+        if (index >= size_) {
+            throw invalidIndexNumber(size_, index);
         }
         auto value = array_[index];
         resizeWithShiftLeft(index);

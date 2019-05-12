@@ -2,6 +2,7 @@
 #define UTILS_HPP
 
 #include <cstddef>
+#include <sstream>
 
 template <typename T>
 void copyPointerArray(T* from, T* to, size_t num)
@@ -34,5 +35,14 @@ enum ResizeMode {
     Grow,
     Shrink,
 };
+
+std::string invalidIndexNumber(size_t size, size_t index);
+
+std::string invalidIndexNumber(size_t size, size_t index)
+{
+    std::stringstream ss;
+    ss << "invalid index value (size: " << size << ", index: " << index << ")";
+    return ss.str();
+}
 
 #endif
