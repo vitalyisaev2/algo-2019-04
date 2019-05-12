@@ -14,6 +14,9 @@ class MatrixArray : public DynamicArray<T>
     MatrixArray(size_t row_size) : array_(new SingleArray<DynamicArray<T>*>()), size_(0), row_size_(row_size){};
     ~MatrixArray()
     {
+        while (array_->size()) {
+            shrink();
+        }
         delete array_;
         array_ = nullptr;
     }
@@ -35,7 +38,7 @@ class MatrixArray : public DynamicArray<T>
             grow();
         }
         shiftRight(index);
-        array_->get(size_ / row_size_)->add(item);
+        array_->get(index / row_size_)->add(item, index % row_size_);
         size_++;
     };
 
@@ -96,10 +99,9 @@ class MatrixArray : public DynamicArray<T>
 
         // последний элемент предыдущего массива становится
         // первым элементом следующего;
-        for (auto i = array_->size(); i >= lastAffectedRow + 1; --i) {
+        for (auto i = array_->size() - 1; i >= lastAffectedRow + 1; --i) {
             auto next = array_->get(i);
             auto prev = array_->get(i - 1);
-            std::cout << "i: " << i << "next: " << *next << " prev: " << *prev << std::endl;
             next->add(prev->remove(prev->size() - 1), 0);
         }
     }

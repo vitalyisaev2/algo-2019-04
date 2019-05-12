@@ -4,7 +4,6 @@
 #include "single_array.hpp"
 #include "vector_array.hpp"
 #include <catch2/catch.hpp>
-#include <iostream>
 
 TEMPLATE_TEST_CASE("DynamicArray operations", "[DynamicArray][template]", SingleArray<int>, VectorArray<int>, FactorArray<int>,
                    MatrixArray<int>)

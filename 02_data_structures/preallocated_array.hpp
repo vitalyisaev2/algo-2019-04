@@ -3,7 +3,6 @@
 
 #include "dynamic_array.hpp"
 #include "utils.hpp"
-#include <sstream>
 
 // абстрактный класс динамического массива, который оптимизирует количество аллокаций
 template <typename T>
