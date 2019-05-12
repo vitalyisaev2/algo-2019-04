@@ -144,7 +144,7 @@ static void BM_DynamicArray_Get_Parametrized(benchmark::State& state) {
 
 // benchmark options
 
-std::vector<int> args = {2 << 0, 2 << 4, 2 << 8, 2 << 12, 2 << 16};
+std::vector<int> args = {2 << 0, 2 << 7, 2 << 14};
 
 static void OnePositionArgs(benchmark::internal::Benchmark* b)
 {

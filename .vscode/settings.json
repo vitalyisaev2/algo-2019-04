@@ -53,5 +53,7 @@
         "utility": "cpp",
         "variant": "cpp",
         "algorithm": "cpp"
-    }
+    },
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
 }
