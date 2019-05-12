@@ -4,11 +4,10 @@
 #include "std_vector_array.hpp"
 #include "vector_array.hpp"
 #include <benchmark/benchmark.h>
-
-const int iterations = 2 << 13;
+#include <vector>
 
 template <typename T>
-static void addFront(benchmark::State& state, DynamicArray<T>* array)
+static void addFront(benchmark::State& state, DynamicArray<T>* array, int iterations)
 {
     const T value = 1;
     for (auto _ : state) {
@@ -19,7 +18,7 @@ static void addFront(benchmark::State& state, DynamicArray<T>* array)
 }
 
 template <typename T>
-static void addBack(benchmark::State& state, DynamicArray<T>* array)
+static void addBack(benchmark::State& state, DynamicArray<T>* array, int iterations)
 {
     const T value = 1;
     for (auto _ : state) {
@@ -30,7 +29,7 @@ static void addBack(benchmark::State& state, DynamicArray<T>* array)
 }
 
 template <typename T>
-static void removeFront(benchmark::State& state, DynamicArray<T>* array)
+static void removeFront(benchmark::State& state, DynamicArray<T>* array, int iterations)
 {
     for (auto _ : state) {
         state.PauseTiming();
@@ -45,7 +44,7 @@ static void removeFront(benchmark::State& state, DynamicArray<T>* array)
 }
 
 template <typename T>
-static void removeBack(benchmark::State& state, DynamicArray<T>* array)
+static void removeBack(benchmark::State& state, DynamicArray<T>* array, int iterations)
 {
     for (auto _ : state) {
         state.PauseTiming();
@@ -60,7 +59,7 @@ static void removeBack(benchmark::State& state, DynamicArray<T>* array)
 }
 
 template <typename T>
-static void get(benchmark::State& state, DynamicArray<T>* array)
+static void get(benchmark::State& state, DynamicArray<T>* array, int iterations)
 {
     for (auto i = 0; i < iterations; i++) {
         array->add(i);
@@ -75,186 +74,120 @@ static void get(benchmark::State& state, DynamicArray<T>* array)
 
 // add front
 
-static void BM_SingleArray_Add_Front(benchmark::State& state)
-{
-    SingleArray<int> array;
-    addFront<int>(state, &array);
+template <typename T>
+static void BM_DynamicArray_AddFront_Simple(benchmark::State& state) {
+    T array;
+    addFront<int>(state, &array, state.range(0));
 }
 
-static void BM_VectorArray_Add_Front(benchmark::State& state)
-{
-    VectorArray<int> array(static_cast<size_t>(state.range(0)));
-    addFront<int>(state, &array);
-}
-
-static void BM_FactorArray_Add_Front(benchmark::State& state)
-{
-    FactorArray<int> array;
-    addFront<int>(state, &array);
-}
-
-static void BM_MatrixArray_Add_Front(benchmark::State& state)
-{
-    MatrixArray<int> array(static_cast<size_t>(state.range(0)));
-    addFront<int>(state, &array);
-}
-
-static void BM_StdVectorArray_Add_Front(benchmark::State& state)
-{
-    StdVectorArray<int> array;
-    addFront<int>(state, &array);
+template <typename T>
+static void BM_DynamicArray_AddFront_Parametrized(benchmark::State& state) {
+    T array(static_cast<size_t>(state.range(1)));
+    addFront<int>(state, &array, state.range(0));
 }
 
 // add back
 
-static void BM_SingleArray_Add_Back(benchmark::State& state)
-{
-    SingleArray<int> array;
-    addBack<int>(state, &array);
+template <typename T>
+static void BM_DynamicArray_AddBack_Simple(benchmark::State& state) {
+    T array;
+    addBack<int>(state, &array, state.range(0));
 }
 
-static void BM_VectorArray_Add_Back(benchmark::State& state)
-{
-    VectorArray<int> array(static_cast<size_t>(state.range(0)));
-    addBack<int>(state, &array);
-}
-
-static void BM_FactorArray_Add_Back(benchmark::State& state)
-{
-    FactorArray<int> array;
-    addBack<int>(state, &array);
-}
-
-static void BM_MatrixArray_Add_Back(benchmark::State& state)
-{
-    MatrixArray<int> array(static_cast<size_t>(state.range(0)));
-    addBack<int>(state, &array);
-}
-
-static void BM_StdVectorArray_Add_Back(benchmark::State& state)
-{
-    StdVectorArray<int> array;
-    addBack<int>(state, &array);
+template <typename T>
+static void BM_DynamicArray_AddBack_Parametrized(benchmark::State& state) {
+    T array(static_cast<size_t>(state.range(1)));
+    addBack<int>(state, &array, state.range(0));
 }
 
 // remove front
 
-static void BM_SingleArray_Remove_Front(benchmark::State& state)
-{
-    SingleArray<int> array;
-    removeFront<int>(state, &array);
+template <typename T>
+static void BM_DynamicArray_RemoveFront_Simple(benchmark::State& state) {
+    T array;
+    removeFront<int>(state, &array, state.range(0));
 }
 
-static void BM_VectorArray_Remove_Front(benchmark::State& state)
-{
-    VectorArray<int> array(static_cast<size_t>(state.range(0)));
-    removeFront<int>(state, &array);
-}
-
-static void BM_FactorArray_Remove_Front(benchmark::State& state)
-{
-    FactorArray<int> array;
-    removeFront<int>(state, &array);
-}
-
-static void BM_MatrixArray_Remove_Front(benchmark::State& state)
-{
-    MatrixArray<int> array(static_cast<size_t>(state.range(0)));
-    removeFront<int>(state, &array);
-}
-
-static void BM_StdVectorArray_Remove_Front(benchmark::State& state)
-{
-    StdVectorArray<int> array;
-    removeFront<int>(state, &array);
+template <typename T>
+static void BM_DynamicArray_RemoveFront_Parametrized(benchmark::State& state) {
+    T array(static_cast<size_t>(state.range(1)));
+    removeFront<int>(state, &array, state.range(0));
 }
 
 // remove back
 
-static void BM_SingleArray_Remove_Back(benchmark::State& state)
-{
-    SingleArray<int> array;
-    removeBack<int>(state, &array);
+template <typename T>
+static void BM_DynamicArray_RemoveBack_Simple(benchmark::State& state) {
+    T array;
+    removeBack<int>(state, &array, state.range(0));
 }
 
-static void BM_VectorArray_Remove_Back(benchmark::State& state)
-{
-    VectorArray<int> array(static_cast<size_t>(state.range(0)));
-    removeBack<int>(state, &array);
-}
-
-static void BM_FactorArray_Remove_Back(benchmark::State& state)
-{
-    FactorArray<int> array;
-    removeBack<int>(state, &array);
-}
-
-static void BM_MatrixArray_Remove_Back(benchmark::State& state)
-{
-    MatrixArray<int> array(static_cast<size_t>(state.range(0)));
-    removeBack<int>(state, &array);
-}
-
-static void BM_StdVectorArray_Remove_Back(benchmark::State& state)
-{
-    StdVectorArray<int> array;
-    removeBack<int>(state, &array);
+template <typename T>
+static void BM_DynamicArray_RemoveBack_Parametrized(benchmark::State& state) {
+    T array(static_cast<size_t>(state.range(1)));
+    removeBack<int>(state, &array, state.range(0));
 }
 
 // get
 
-static void BM_SingleArray_Get(benchmark::State& state)
-{
-    SingleArray<int> array;
-    get<int>(state, &array);
+template <typename T>
+static void BM_DynamicArray_Get_Simple(benchmark::State& state) {
+    T array;
+    get<int>(state, &array, state.range(0));
 }
 
-static void BM_VectorArray_Get(benchmark::State& state)
-{
-    VectorArray<int> array(static_cast<size_t>(state.range(0)));
-    get<int>(state, &array);
+template <typename T>
+static void BM_DynamicArray_Get_Parametrized(benchmark::State& state) {
+    T array(static_cast<size_t>(state.range(1)));
+    get<int>(state, &array, state.range(0));
 }
 
-static void BM_FactorArray_Get(benchmark::State& state)
+// benchmark options
+
+std::vector<int> args = {2 << 0, 2 << 4, 2 << 8, 2 << 12, 2 << 16};
+
+static void OnePositionArgs(benchmark::internal::Benchmark* b)
 {
-    FactorArray<int> array;
-    get<int>(state, &array);
+    for (auto iterations : args) {
+        b->Arg({iterations});
+    }
 }
 
-static void BM_MatrixArray_Get(benchmark::State& state)
+static void TwoPositionArgs(benchmark::internal::Benchmark* b)
 {
-    MatrixArray<int> array(static_cast<size_t>(state.range(0)));
-    get<int>(state, &array);
+    for (auto iterations : args) {
+        for (auto parameter : args) {
+            b->Args({iterations, parameter});
+        }
+    }
 }
 
-static void BM_StdVectorArray_Get(benchmark::State& state)
-{
-    StdVectorArray<int> array;
-    get<int>(state, &array);
-}
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Simple, SingleArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Simple, VectorArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Simple, FactorArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Simple, StdVectorArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Simple, MatrixArray<int>)->Apply(TwoPositionArgs);
 
-BENCHMARK(BM_SingleArray_Add_Front);
-BENCHMARK(BM_VectorArray_Add_Front)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
-BENCHMARK(BM_FactorArray_Add_Front);
-BENCHMARK(BM_StdVectorArray_Add_Front);
-BENCHMARK(BM_MatrixArray_Add_Front)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
-BENCHMARK(BM_SingleArray_Add_Back);
-BENCHMARK(BM_VectorArray_Add_Back)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
-BENCHMARK(BM_FactorArray_Add_Back);
-BENCHMARK(BM_StdVectorArray_Add_Back);
-BENCHMARK(BM_MatrixArray_Add_Back)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
-BENCHMARK(BM_SingleArray_Remove_Front);
-BENCHMARK(BM_VectorArray_Remove_Front)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
-BENCHMARK(BM_FactorArray_Remove_Front);
-BENCHMARK(BM_StdVectorArray_Remove_Front);
-BENCHMARK(BM_MatrixArray_Remove_Front)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
-BENCHMARK(BM_SingleArray_Remove_Back);
-BENCHMARK(BM_VectorArray_Remove_Back)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
-BENCHMARK(BM_FactorArray_Remove_Back);
-BENCHMARK(BM_StdVectorArray_Remove_Back);
-BENCHMARK(BM_MatrixArray_Remove_Back)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
-BENCHMARK(BM_SingleArray_Get);
-BENCHMARK(BM_VectorArray_Get)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
-BENCHMARK(BM_FactorArray_Get);
-BENCHMARK(BM_StdVectorArray_Get);
-BENCHMARK(BM_MatrixArray_Get)->RangeMultiplier(2)->Arg(2 << 0)->Arg(2 << 5)->Arg(2 << 10)->Arg(2 << 15);
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddBack_Simple, SingleArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddBack_Simple, VectorArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddBack_Simple, FactorArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddBack_Simple, StdVectorArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddBack_Simple, MatrixArray<int>)->Apply(TwoPositionArgs);
+
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Simple, SingleArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Simple, VectorArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Simple, FactorArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Simple, StdVectorArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Simple, MatrixArray<int>)->Apply(TwoPositionArgs);
+
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Simple, SingleArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Simple, VectorArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Simple, FactorArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Simple, StdVectorArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Simple, MatrixArray<int>)->Apply(TwoPositionArgs);
+
+BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Simple, SingleArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Simple, VectorArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Simple, FactorArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Simple, StdVectorArray<int>)->Apply(OnePositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Simple, MatrixArray<int>)->Apply(TwoPositionArgs);
