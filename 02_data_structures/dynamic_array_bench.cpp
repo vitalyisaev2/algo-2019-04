@@ -75,13 +75,15 @@ static void get(benchmark::State& state, DynamicArray<T>* array, int iterations)
 // add front
 
 template <typename T>
-static void BM_DynamicArray_AddFront_Simple(benchmark::State& state) {
+static void BM_DynamicArray_AddFront_Simple(benchmark::State& state)
+{
     T array;
     addFront<int>(state, &array, state.range(0));
 }
 
 template <typename T>
-static void BM_DynamicArray_AddFront_Parametrized(benchmark::State& state) {
+static void BM_DynamicArray_AddFront_Parametrized(benchmark::State& state)
+{
     T array(static_cast<size_t>(state.range(1)));
     addFront<int>(state, &array, state.range(0));
 }
@@ -89,13 +91,15 @@ static void BM_DynamicArray_AddFront_Parametrized(benchmark::State& state) {
 // add back
 
 template <typename T>
-static void BM_DynamicArray_AddBack_Simple(benchmark::State& state) {
+static void BM_DynamicArray_AddBack_Simple(benchmark::State& state)
+{
     T array;
     addBack<int>(state, &array, state.range(0));
 }
 
 template <typename T>
-static void BM_DynamicArray_AddBack_Parametrized(benchmark::State& state) {
+static void BM_DynamicArray_AddBack_Parametrized(benchmark::State& state)
+{
     T array(static_cast<size_t>(state.range(1)));
     addBack<int>(state, &array, state.range(0));
 }
@@ -103,13 +107,15 @@ static void BM_DynamicArray_AddBack_Parametrized(benchmark::State& state) {
 // remove front
 
 template <typename T>
-static void BM_DynamicArray_RemoveFront_Simple(benchmark::State& state) {
+static void BM_DynamicArray_RemoveFront_Simple(benchmark::State& state)
+{
     T array;
     removeFront<int>(state, &array, state.range(0));
 }
 
 template <typename T>
-static void BM_DynamicArray_RemoveFront_Parametrized(benchmark::State& state) {
+static void BM_DynamicArray_RemoveFront_Parametrized(benchmark::State& state)
+{
     T array(static_cast<size_t>(state.range(1)));
     removeFront<int>(state, &array, state.range(0));
 }
@@ -117,13 +123,15 @@ static void BM_DynamicArray_RemoveFront_Parametrized(benchmark::State& state) {
 // remove back
 
 template <typename T>
-static void BM_DynamicArray_RemoveBack_Simple(benchmark::State& state) {
+static void BM_DynamicArray_RemoveBack_Simple(benchmark::State& state)
+{
     T array;
     removeBack<int>(state, &array, state.range(0));
 }
 
 template <typename T>
-static void BM_DynamicArray_RemoveBack_Parametrized(benchmark::State& state) {
+static void BM_DynamicArray_RemoveBack_Parametrized(benchmark::State& state)
+{
     T array(static_cast<size_t>(state.range(1)));
     removeBack<int>(state, &array, state.range(0));
 }
@@ -131,32 +139,35 @@ static void BM_DynamicArray_RemoveBack_Parametrized(benchmark::State& state) {
 // get
 
 template <typename T>
-static void BM_DynamicArray_Get_Simple(benchmark::State& state) {
+static void BM_DynamicArray_Get_Simple(benchmark::State& state)
+{
     T array;
     get<int>(state, &array, state.range(0));
 }
 
 template <typename T>
-static void BM_DynamicArray_Get_Parametrized(benchmark::State& state) {
+static void BM_DynamicArray_Get_Parametrized(benchmark::State& state)
+{
     T array(static_cast<size_t>(state.range(1)));
     get<int>(state, &array, state.range(0));
 }
 
 // benchmark options
 
-std::vector<int> args = {2 << 0, 2 << 7, 2 << 14};
+std::vector<int> iteration_values = {2 << 0, 2 << 4, 2 << 8, 2 << 12, 2 << 16};
+std::vector<int> parameter_values = {2 << 1, 2 << 16};
 
 static void OnePositionArgs(benchmark::internal::Benchmark* b)
 {
-    for (auto iterations : args) {
+    for (auto iterations : iteration_values) {
         b->Arg({iterations});
     }
 }
 
 static void TwoPositionArgs(benchmark::internal::Benchmark* b)
 {
-    for (auto iterations : args) {
-        for (auto parameter : args) {
+    for (auto iterations : iteration_values) {
+        for (auto parameter : parameter_values) {
             b->Args({iterations, parameter});
         }
     }
