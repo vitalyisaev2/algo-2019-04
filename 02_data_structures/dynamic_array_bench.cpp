@@ -191,11 +191,11 @@ static void TwoPositionArgs(benchmark::internal::Benchmark* b)
     }
 }
 
-// BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Simple, SingleArray<int>)->Apply(OnePositionArgs)->Complexity();
-// BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Parametrized, VectorArray<int>)->Apply(TwoPositionArgs);
-// BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Simple, FactorArray<int>)->Apply(OnePositionArgs)->Complexity();
-// BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Simple, StdVectorArray<int>)->Apply(OnePositionArgs)->Complexity();
-// BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Parametrized, MatrixArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Simple, SingleArray<int>)->Apply(OnePositionArgs)->Complexity();
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Parametrized, VectorArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Simple, FactorArray<int>)->Apply(OnePositionArgs)->Complexity();
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Simple, StdVectorArray<int>)->Apply(OnePositionArgs)->Complexity();
+BENCHMARK_TEMPLATE(BM_DynamicArray_AddFront_Parametrized, MatrixArray<int>)->Apply(TwoPositionArgs);
 
 BENCHMARK_TEMPLATE(BM_DynamicArray_AddBack_Simple, SingleArray<int>)->Apply(OnePositionArgs)->Complexity();
 BENCHMARK_TEMPLATE(BM_DynamicArray_AddBack_Parametrized, VectorArray<int>)->Apply(TwoPositionArgs);
@@ -203,20 +203,20 @@ BENCHMARK_TEMPLATE(BM_DynamicArray_AddBack_Simple, FactorArray<int>)->Apply(OneP
 BENCHMARK_TEMPLATE(BM_DynamicArray_AddBack_Simple, StdVectorArray<int>)->Apply(OnePositionArgs)->Complexity();
 BENCHMARK_TEMPLATE(BM_DynamicArray_AddBack_Parametrized, MatrixArray<int>)->Apply(TwoPositionArgs);
 
-// BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Simple, SingleArray<int>)->Apply(OnePositionArgs)->Complexity();
-// BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Parametrized, VectorArray<int>)->Apply(TwoPositionArgs);
-// BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Simple, FactorArray<int>)->Apply(OnePositionArgs)->Complexity();
-// BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Simple, StdVectorArray<int>)->Apply(OnePositionArgs)->Complexity();
-// BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Parametrized, MatrixArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Simple, SingleArray<int>)->Apply(OnePositionArgs)->Complexity();
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Parametrized, VectorArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Simple, FactorArray<int>)->Apply(OnePositionArgs)->Complexity();
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Simple, StdVectorArray<int>)->Apply(OnePositionArgs)->Complexity();
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveFront_Parametrized, MatrixArray<int>)->Apply(TwoPositionArgs);
 
-// BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Simple, SingleArray<int>)->Apply(OnePositionArgs)->Complexity();
-// BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Parametrized, VectorArray<int>)->Apply(TwoPositionArgs);
-// BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Simple, FactorArray<int>)->Apply(OnePositionArgs)->Complexity();
-// BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Simple, StdVectorArray<int>)->Apply(OnePositionArgs)->Complexity();
-// BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Parametrized, MatrixArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Simple, SingleArray<int>)->Apply(OnePositionArgs)->Complexity();
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Parametrized, VectorArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Simple, FactorArray<int>)->Apply(OnePositionArgs)->Complexity();
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Simple, StdVectorArray<int>)->Apply(OnePositionArgs)->Complexity();
+BENCHMARK_TEMPLATE(BM_DynamicArray_RemoveBack_Parametrized, MatrixArray<int>)->Apply(TwoPositionArgs);
 
-// BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Simple, SingleArray<int>)->Apply(OnePositionArgs)->Complexity();
-// BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Parametrized, VectorArray<int>)->Apply(TwoPositionArgs);
-// BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Simple, FactorArray<int>)->Apply(OnePositionArgs)->Complexity();
-// BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Simple, StdVectorArray<int>)->Apply(OnePositionArgs)->Complexity();
-// BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Parametrized, MatrixArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Simple, SingleArray<int>)->Apply(OnePositionArgs)->Complexity();
+BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Parametrized, VectorArray<int>)->Apply(TwoPositionArgs);
+BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Simple, FactorArray<int>)->Apply(OnePositionArgs)->Complexity();
+BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Simple, StdVectorArray<int>)->Apply(OnePositionArgs)->Complexity();
+BENCHMARK_TEMPLATE(BM_DynamicArray_Get_Parametrized, MatrixArray<int>)->Apply(TwoPositionArgs);
