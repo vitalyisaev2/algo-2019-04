@@ -20,7 +20,7 @@ def extractType(name):
     return "{0}({1})".format(type_name, type_parameter)
 
 
-def extractIterations(name):
+def extractN(name):
     return int(name.split("/")[1])
 
 
@@ -33,9 +33,9 @@ def buildDataFrame():
     df = src[pandas.notnull(src["cpu_time"])][["name", "cpu_time"]]
     df["method"] = df["name"].apply(extractMethodName)
     df["type"] = df["name"].apply(extractType)
-    df["iterations"] = df["name"].apply(extractIterations)
+    df["n"] = df["name"].apply(extractN)
     df = df.drop(columns="name")
-    df = df[["method", "type", "iterations", "cpu_time"]]
+    df = df[["method", "type", "n", "cpu_time"]]
 
     return df
 
@@ -58,7 +58,7 @@ def buildComplexity():
 
 def renderDataFrame(df, method_name):
     pivot = df[df["method"] == method_name].pivot(
-        index="iterations", columns="type", values="cpu_time")
+        index="n", columns="type", values="cpu_time")
     print(pivot)
     axes = pivot.plot(kind="line", title="DynamicArray.{}".format(
         method_name), logx=True, logy=True)
