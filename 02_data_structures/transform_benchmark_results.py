@@ -27,13 +27,32 @@ def extractIterations(name):
 def buildDataFrame():
     with open(fname) as fd:
         data = json.load(fd)["benchmarks"]
-    df = pandas.DataFrame(data)[["name", "cpu_time"]]
+    src = pandas.DataFrame(data)
+
+    # данные графиков
+    df = src[pandas.notnull(src["cpu_time"])][["name", "cpu_time"]]
     df["method"] = df["name"].apply(extractMethodName)
     df["type"] = df["name"].apply(extractType)
     df["iterations"] = df["name"].apply(extractIterations)
     df = df.drop(columns="name")
     df = df[["method", "type", "iterations", "cpu_time"]]
+
+    return df
+
+
+def buildComplexity():
+    with open(fname) as fd:
+        data = json.load(fd)["benchmarks"]
+    src = pandas.DataFrame(data)
+
+    # вычислительная сложность
+    df = src[pandas.notnull(src["big_o"])][["name", "big_o"]]
     print(df)
+    df["method"] = df["name"].apply(extractMethodName)
+    df["type"] = df["name"].apply(extractType)
+    df = df.drop(columns="name")
+    df = df[["method", "type", "big_o"]]
+
     return df
 
 
@@ -50,6 +69,9 @@ def renderDataFrame(df, method_name):
 
 
 def main():
+    cf = buildComplexity()
+    print(cf)
+
     df = buildDataFrame()
     df.to_csv("/tmp/benchmark.csv")
     for method_name in df["method"].unique().tolist():
