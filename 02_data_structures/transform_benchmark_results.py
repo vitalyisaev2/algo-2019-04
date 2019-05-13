@@ -57,6 +57,8 @@ def buildComplexity():
 
 
 def renderDataFrame(df, method_name):
+    print("\n\n")
+    print(method_name)
     pivot = df[df["method"] == method_name].pivot(
         index="n", columns="type", values="cpu_time")
     print(pivot)
