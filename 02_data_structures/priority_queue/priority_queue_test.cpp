@@ -30,4 +30,14 @@ TEMPLATE_TEST_CASE("PriorityQueue operations", "[PriorityQueue][template]", Link
         REQUIRE(queue.dequeue() == 5);
         REQUIRE(queue.dequeue() == 10);
     }
+
+    SECTION("append to new head") {
+        TestType queue;
+        queue.enqueue(0, 0);
+        queue.enqueue(1, 1);
+        REQUIRE(queue.dequeue() == 0);
+        queue.enqueue(0, 2);
+        REQUIRE(queue.dequeue() == 1);
+        REQUIRE(queue.dequeue() == 2);
+    } 
 }
