@@ -2,12 +2,13 @@
 #include "factor_array.hpp"
 #include "matrix_array.hpp"
 #include "single_array.hpp"
+#include "space_array.hpp"
 #include "std_vector_array.hpp"
 #include "vector_array.hpp"
 #include <catch2/catch.hpp>
 
 TEMPLATE_TEST_CASE("DynamicArray operations", "[DynamicArray][template]", SingleArray<int>, VectorArray<int>, FactorArray<int>,
-                   MatrixArray<int>, StdVectorArray<int>)
+                    MatrixArray<int>, StdVectorArray<int>, SpaceArray<int>)
 {
     SECTION("simple CRUD operations")
     {

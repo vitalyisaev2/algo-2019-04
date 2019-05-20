@@ -11,8 +11,6 @@ class PreallocatedArray : public DynamicArray<T>
   public:
     PreallocatedArray() : array_(nullptr), size_(0), capacity_(0){};
 
-    //PreallocatedArray(size_t capacity) : array_(new T[capacity]), size_(0), capacity_(capacity){};
-
     ~PreallocatedArray()
     {
         if (array_ != nullptr) {
