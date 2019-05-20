@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 
 fname = "/tmp/result"
 
+pandas.set_option('display.max_rows', 500)
+pandas.set_option('display.max_columns', 500)
+pandas.set_option('display.width', 1000)
 
 def extractMethodName(name):
     return name.split("_")[2]
