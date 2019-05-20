@@ -77,9 +77,7 @@ TEMPLATE_TEST_CASE("DynamicArray operations", "[DynamicArray][template]", Single
         array.add(2);
         array.add(3);
         array.add(4);
-        std::cout << "A1" << std::endl;
         array.add(5, 5);
-        std::cout << "A2" << std::endl;
 
         TestType expected;
         expected.add(0);

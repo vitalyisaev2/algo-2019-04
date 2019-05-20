@@ -3,6 +3,7 @@
 
 #include "dynamic_array.hpp"
 #include "factor_array.hpp"
+#include "vector_array.hpp"
 #include <tuple>
 
 template <typename T>
@@ -25,11 +26,11 @@ class SpaceArray : public DynamicArray<T>
     {
         if (array_->size() == 0) {
             // если массив пуст, выделяем память
-            array_->add(new FactorArray<T>());
+            array_->add(new VectorArray<T>(row_size_));
         } else if (rowIsFull(array_->size() - 1)) {
             // достигнут предел размера для последнего ряда,
             // необходимо создать новый ряд
-            array_->add(new FactorArray<T>());
+            array_->add(new VectorArray<T>(row_size_));
         }
         array_->get(array_->size() - 1)->add(item);
     };
@@ -38,7 +39,7 @@ class SpaceArray : public DynamicArray<T>
     void add(T item, size_t index)
     {
         if (array_->size() == 0) {
-            array_->add(new FactorArray<T>());
+            array_->add(new VectorArray<T>(row_size_));
         }
 
         auto position = getIndexPosition(index);
@@ -60,7 +61,7 @@ class SpaceArray : public DynamicArray<T>
             if (rowID > 0 && !rowIsFull(rowID - 1)) {
                 array_->get(rowID - 1)->add(item);
             } else {
-                auto newRow = new FactorArray<T>();
+                auto newRow = new VectorArray<T>(row_size_);
                 array_->add(newRow, rowID);
                 newRow->add(item);
             }
@@ -70,14 +71,14 @@ class SpaceArray : public DynamicArray<T>
             if (rowID < array_->size() - 1 && !rowIsFull(rowID + 1)) {
                 array_->get(rowID - 1)->add(item);
             } else {
-                auto newRow = new FactorArray<T>();
-                array_->add(new FactorArray<T>(), rowID + 1);
+                auto newRow = new VectorArray<T>(row_size_);
+                array_->add(newRow, rowID + 1);
                 newRow->add(item);
             }
         } else {
             // при добавлении данных в середину заполненного массива его хвост перемещается в новый массив
-            auto newRow = new FactorArray<T>();
-            array_->add(new FactorArray<T>(), rowID + 1);
+            auto newRow = new VectorArray<T>(row_size_);
+            array_->add(newRow, rowID + 1);
             // записываем хвост в новый массив
             for (auto i = cellID + 1; i < thisRow->size(); i++) {
                 newRow->add(thisRow->get(i));
