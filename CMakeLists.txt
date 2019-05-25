@@ -25,9 +25,15 @@ find_package(Catch2 2.7 REQUIRED)
 find_package(benchmark REQUIRED)
 
 # сборка бинарника с тестами
-file(GLOB_RECURSE tests_src "*test.cpp")
+file(GLOB tests_main_src "*.cpp")
+file(GLOB_RECURSE tests_full_src 
+  ${PROJECT_SOURCE_DIR}/02_dynamic_array/*.cpp
+  ${PROJECT_SOURCE_DIR}/03_chess/*.cpp
+)
+list(APPEND tests_full_src ${tests_main_src})
+list(FILTER tests_full_src EXCLUDE REGEX ".*bench.cpp$")
 SUBDIRLIST(tests_include "${PROJECT_SOURCE_DIR}")
-add_executable(tests "${tests_src}")
+add_executable(tests "${tests_full_src}")
 target_include_directories(tests PRIVATE "${tests_include}")
 target_link_libraries(tests Catch2::Catch2)
 
