@@ -16,8 +16,8 @@ namespace fen
         KING   = 6,
     };
 
-    // SIDE - цветовая принадлежность фигуры
-    enum SIDE {
+    // COLOR - цветовая принадлежность фигуры
+    enum COLOR {
         UNMARKED = 0,
         BLACK    = 1,
         WHITE    = 2,
@@ -32,11 +32,11 @@ namespace fen
         // конструктор ячейки, занятой какой-то фигурой
         Cell(const char& input);
         FIGURE GetFigure() const;
-        SIDE   GetSide() const;
+        COLOR  GetColor() const;
         char   ToChar() const;
 
       private:
-        SIDE   side;
+        COLOR  side;
         FIGURE figure;
     };
 
@@ -67,6 +67,34 @@ namespace fen
     };
 
     std::ostream& operator<<(std::ostream& out, const Board& figure);
+
+    enum CastlingDirection {
+        NOWHERE   = 0,
+        KINGSIDE  = 1,
+        QUEENSIDE = 2,
+    };
+
+    struct Castling {
+        std::string       ToString() const;
+        CastlingDirection white;
+        CastlingDirection black;
+    };
+
+    class Record
+    {
+      public:
+        Record() = delete;
+        Record(const std::string& src);
+        std::string ToString() const;
+
+      private:
+        Board       board;
+        COLOR       activeColor;
+        Castling    castling;
+        Cell*       enPassant;
+        std::size_t halfMoves;
+        std::size_t fullMoves;
+    };
 
 } // namespace fen
 

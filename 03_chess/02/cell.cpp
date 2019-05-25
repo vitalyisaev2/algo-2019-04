@@ -43,7 +43,7 @@ namespace fen
         return this->figure;
     }
 
-    SIDE Cell::GetSide() const
+    COLOR Cell::GetColor() const
     {
         return this->side;
     }

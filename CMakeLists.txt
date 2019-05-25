@@ -28,7 +28,6 @@ find_package(benchmark REQUIRED)
 file(GLOB tests_main_src "*.cpp")
 file(GLOB_RECURSE tests_full_src 
   ${PROJECT_SOURCE_DIR}/02_data_structures/*.cpp
-  ${PROJECT_SOURCE_DIR}/03_chess/*.cpp
 )
 list(APPEND tests_full_src ${tests_main_src})
 list(FILTER tests_full_src EXCLUDE REGEX ".*bench.cpp$")

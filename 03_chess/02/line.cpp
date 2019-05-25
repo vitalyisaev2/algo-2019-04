@@ -12,7 +12,6 @@ namespace fen
             if (std::isdigit(c)) {
                 // char конвертируется в цифру
                 int emptyNodes = c - '0';
-                // std::cout << "is_digit" << c << " " << emptyNodes << std::endl;
                 while (emptyNodes--) {
                     this->cells[i] = Cell();
                     i++;
@@ -30,7 +29,6 @@ namespace fen
         int               emptySequence = 0;
 
         for (const auto& cell : cells) {
-            // std::cout << cell.ToChar() << " " << int(cell.GetFigure()) << " " << int(cell.GetSide()) << std::endl;
             switch (cell.GetFigure()) {
             case EMPTY:
                 emptySequence++;
