@@ -3,15 +3,27 @@
 #include <iostream>
 #include <vector>
 
-TEST_CASE("fen")
+TEST_CASE("FEN")
 {
     SECTION("line")
     {
-        std::vector<std::string> lines = {
+        // проверка на корректное конструирование / сериализацию горизонтали
+        std::vector<std::string> inputs = {
             "rnbqkbnr", "pppppppp", "8", "PPPPPPPP", "RNBQKBNR", "4P3", "3p4", "PPPP1PPP", "ppp1pppp",
         };
-        for (const auto& line : lines) {
-            REQUIRE(fen::Line(line).ToString() == line);
+        for (const auto& input : inputs) {
+            REQUIRE(fen::Line(input).ToString() == input);
+        }
+    }
+
+    SECTION("board")
+    {
+        // проверка на корректное конструирование / сериализацию последовательности горизонталей
+        std::vector<std::string> inputs = {
+            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
+        };
+        for (const auto& input: inputs) {
+            REQUIRE(fen::Board(input).ToString() == input);
         }
     }
 }

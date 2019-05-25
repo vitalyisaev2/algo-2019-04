@@ -56,6 +56,12 @@ namespace fen
 
     class Board
     {
+      public:
+        Board() = delete;
+        Board(const std::string& src);
+        std::string ToString() const;
+        ~Board();
+
       private:
         std::array<Line*, 8> lines;
     };
