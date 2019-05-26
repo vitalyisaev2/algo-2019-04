@@ -45,13 +45,32 @@ class TestRecord(unittest.TestCase):
         for case in cases:
             self.assertEqual(str(Record(case[0])), case[1])
 
+    def test_change_active_color_and_full_counter(self):
+        cases = [
+            (
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+                "e2e2",
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1",
+            ),
+            (
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1",
+                "e7e7",
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 2"
+            )
+        ]
+        for case in cases:
+            r = Record(case[0])
+            r.make_move(case[1])
+            self.assertEqual(str(r), case[2])
+
+
 class TestBoard(unittest.TestCase):
 
     def test_parsing_and_serialization(self):
         cases = [
             (
                 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-"""  +-----------------+
+                """  +-----------------+
 8 | r n b q k b n r |
 7 | p p p p p p p p |
 6 | . . . . . . . . |
@@ -67,6 +86,7 @@ class TestBoard(unittest.TestCase):
         for case in cases:
             p = Record(case[0]).position
             self.assertEqual(str(Board(p)), case[1])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,5 +1,6 @@
 from enum import Enum, IntFlag
 from typing import List
+import re
 
 
 class Color(Enum):
@@ -84,18 +85,28 @@ class Figure(Enum):
 
 class Coordinates:
     row: int
-    column: chr
+    column: int
+    pattern = re.compile("[abcdefgh]{1}[1-8]{1}")
 
-    def __init__(self, row: int, column: chr):
+    def __init__(self, row: int, column: int):
         self.row = row
+        if not type(column) == int:
+            raise "AAA"
         self.column = column
 
     @staticmethod
-    def from_int_pair(row: int, column: int):
-        return Coordinates(row, chr(ord('a') + column))
+    def from_str(src: str):
+        if not Coordinates.pattern.match(src):
+            raise ValueError("Invalid Coordinates format: '{}'".format(src))
+        column = ord(src[0]) - ord('a')
+        return Coordinates(row=int(src[1]), column=column)
+
+    def __eq__(self, other):
+        return self.row == other.row and self.column == other.column
 
     def __str__(self):
-        return str(self.row) + str(self.column)
+        column = chr(ord('a') + self.column)
+        return str(self.row) + column
 
 
 class Cell:
@@ -124,14 +135,12 @@ class Line:
             if c.isdigit():
                 empty = int(c)
                 while empty > 0:
-                    coordinates = Coordinates.from_int_pair(
-                        self.row, len(self.cells))
+                    coordinates = Coordinates(self.row, len(self.cells))
                     cell = Cell(coordinates)
                     self.cells.append(cell)
                     empty -= 1
             else:
-                coordinates = Coordinates.from_int_pair(
-                    self.row, len(self.cells))
+                coordinates = Coordinates(self.row, len(self.cells))
                 cell = Cell(
                     coordinates=coordinates,
                     color=Color.from_case(c),
@@ -156,6 +165,24 @@ class Line:
         return result
 
 
+class Move:
+    before: Coordinates
+    after: Coordinates
+    pattern = re.compile("([abcdefgh]{1}[1-8]{1}){2}")
+
+    def __init__(self, src: str):
+
+        if not self.pattern.match(src):
+            raise ValueError("Unknown Move format: {}".format(src))
+
+        self.before = Coordinates.from_str(src[:2])
+        self.after = Coordinates.from_str(src[2:])
+
+    @property
+    def dummy(self) -> bool:
+        return self.before == self.after
+
+
 class Position:
     lines: List[Line]
 
@@ -167,6 +194,13 @@ class Position:
 
     def __str__(self):
         return "/".join(str(line) for line in self.lines)
+
+    def make_move(self, move: Move):
+        if not move.dummy:
+            # фигура перемещается из старой позиции в новую
+            self.lines[8 - move.after.row].cells[move.after.column] = self.lines[8 - move.before.row].cells[move.before.column]
+            # на старом месте появляется пустая клетка
+            self.lines[8 - move.before.row].cells[move.after.column] = Cell(coordinates=move.before)
 
 
 class CastlingDirection(IntFlag):
@@ -263,6 +297,16 @@ class Record:
                   self.en_passant, self.halfmoves, self.fullmoves)
         return " ".join(str(item) for item in fields)
 
+    def make_move(self, move: str):
+        # изменить состояние фигур
+        self.position.make_move(Move(move))
+
+        # изменение очерёдности и номера хода
+        if self.active_color == Color.WHITE:
+            self.active_color = Color.BLACK
+        else:
+            self.active_color = Color.WHITE
+            self.fullmoves += 1
 
 class Board:
     position: Position
