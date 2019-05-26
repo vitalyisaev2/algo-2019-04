@@ -23,12 +23,12 @@ class Color(Enum):
             return Color.WHITE
         raise ValueError("Unknown color code: {}".format(src))
 
-    def colorize(self, char: str) -> str:
+    def colorize(self, char: chr) -> str:
         if self == Color.BLACK:
             return char.lower()
         if self == Color.WHITE:
             return char.upper()
-        raise ValueError("Unexpected color to colorize")
+        return char
 
     def __str__(self):
         if self == Color.BLACK:
@@ -65,6 +65,8 @@ class Figure(Enum):
         raise ValueError("Unknown figure code: {}".format(src))
 
     def __str__(self):
+        if self == Figure.EMPTY:
+            return "."
         if self == Figure.PAWN:
             return "p"
         if self == Figure.BISHOP:
@@ -77,7 +79,7 @@ class Figure(Enum):
             return "q"
         if self == Figure.KING:
             return "k"
-        raise ValueError("Cannot serialize to string {}".format(self))
+        raise ValueError("Cannot serialize Figure value to string")
 
 
 class Coordinates:
@@ -160,7 +162,7 @@ class Position:
     def __init__(self, src: str):
         self.lines = []
         for part in src.split('/'):
-            line = Line(row=len(self.lines), src=part)
+            line = Line(row=8-len(self.lines), src=part)
             self.lines.append(line)
 
     def __str__(self):
@@ -214,9 +216,7 @@ class Castling:
         white, black = str(self.white), str(self.black)
         if white == "" and black == "":
             return "-"
-        
-        t = Color.WHITE.colorize(white) + Color.BLACK.colorize(black)
-        return t
+        return Color.WHITE.colorize(white) + Color.BLACK.colorize(black)
 
 
 class EnPassant:
@@ -262,3 +262,28 @@ class Record:
         fields = (self.position, self.active_color, self.castling,
                   self.en_passant, self.halfmoves, self.fullmoves)
         return " ".join(str(item) for item in fields)
+
+
+class Board:
+    position: Position
+
+    def __init__(self, src: Position):
+        self.position = src
+
+    def _header(self) -> str:
+        return "  " + "+" + "-"*17 + "+"
+
+    def _footer(self) -> str:
+        return "    " + " ".join(('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h')) + "  "
+
+    def _line(self, line: Line) -> str:
+        return str(line.row) + " | " + " ".join((str(cell) for cell in line.cells)) + " |"
+
+    def __str__(self):
+        result = []
+        result.append(self._header())
+        for line in self.position.lines:
+            result.append(self._line(line))
+        result.append(self._header())
+        result.append(self._footer())
+        return "\n".join(result)
