@@ -168,7 +168,10 @@ class Line:
 class Move:
     before: Coordinates
     after: Coordinates
-    pattern = re.compile("([abcdefgh]{1}[1-8]{1}){2}")
+    substitution: Figure
+    color: Color
+
+    pattern = re.compile("([abcdefgh]{1}[1-8]{1}){2}[rnbqRNBQ]?")
 
     def __init__(self, src: str):
 
@@ -177,6 +180,13 @@ class Move:
 
         self.before = Coordinates.from_str(src[:2])
         self.after = Coordinates.from_str(src[2:])
+        self.substitution = None
+        self.color = None
+
+        # ход описывает замену пешки на последней строчке
+        if len(src) == 5:
+            self.substitution = Figure.from_str(src[-1])
+            self.color = Color.from_case(src[-1])
 
     @property
     def dummy(self) -> bool:
@@ -197,11 +207,19 @@ class Position:
 
     def make_move(self, move: Move):
         if not move.dummy:
-            # фигура перемещается из старой позиции в новую
-            self.lines[8 - move.after.row].cells[move.after.column] = self.lines[8 - move.before.row].cells[move.before.column]
+            if move.substitution is None:
+                # фигура перемещается из старой позиции в новую
+                self.lines[8 - move.after.row].cells[move.after.column] = \
+                    self.lines[8 - move.before.row].cells[move.before.column]
+            else:
+                # в новой позиции пешка заменяется на желаемую фигуру
+                self.lines[8 - move.after.row].cells[move.after.column] = Cell(
+                    coordinates=move.after, color=move.color, figure=move.substitution)
+
             # на старом месте появляется пустая клетка
-            self.lines[8 - move.before.row].cells[move.before.column] = Cell(coordinates=move.before)
-        
+            self.lines[8 - move.before.row].cells[move.before.column] = Cell(
+                coordinates=move.before)
+
     def get_cell(self, coordinates: Coordinates) -> Cell:
         return self.lines[8 - coordinates.row].cells[coordinates.column]
 
@@ -319,6 +337,20 @@ class Record:
         # изменить состояние фигур на доске
         self.position.make_move(Move(m))
 
+        # ревизия возможностей для рокировки
+        self.__review_castling(self.castling.black, Color.WHITE, 0)
+        self.__review_castling(self.castling.white, Color.BLACK, 7)
+
+    def __review_castling(self, direction: CastlingDirection, enemy_color: Color, row: int):
+        enemies_on_last_line = set(i for (i, cell) in enumerate(self.position.lines[row].cells) if cell.color == enemy_color)
+        # фигуры чужого цвета поместились слева от короля
+        if set((0, 1, 2, 3)).intersection(enemies_on_last_line):
+            direction &= ~CastlingDirection.QUEENSIDE
+        # фигуры чужого цвета поместились справа от короля
+        if set((5, 6, 7)).intersection(enemies_on_last_line):
+            direction &= ~CastlingDirection.KINGSIDE
+
+        
 
 class Board:
     position: Position
