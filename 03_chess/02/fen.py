@@ -1,5 +1,6 @@
-from enum import Enum
+from enum import Enum, IntFlag
 from typing import List
+
 
 class Color(Enum):
     UNSET = 0
@@ -7,13 +8,21 @@ class Color(Enum):
     BLACK = 2
 
     @staticmethod
-    def from_str(input: str):
-        if input.islower():
-            return Color.WHITE
-        elif input.isupper():
+    def from_str(src: str):
+        if src.islower():
             return Color.BLACK
+        elif src.isupper():
+            return Color.WHITE
         else:
-            raise "Unknown color code: {}".format(input)
+            raise ValueError("Unknown color code: {}".format(src))
+
+    def colorize(self, char: str) -> str:
+        if self == Color.BLACK:
+            return char.lower()
+        elif self == Color.WHITE:
+            return char.upper()
+        else:
+            raise ValueError("Cannot serialize to string unmarked cell")
 
 
 class Figure(Enum):
@@ -26,64 +35,152 @@ class Figure(Enum):
     KING = 6
 
     @staticmethod
-    def from_str(input: str):
-        input = input.lower()
-        if input == 'p':
+    def from_str(src: str):
+        src = src.lower()
+        if src == 'p':
             return Figure.PAWN
-        elif input == 'b':
+        elif src == 'b':
             return Figure.BISHOP
-        elif input == 'n':
+        elif src == 'n':
             return Figure.KNIGHT
-        elif input == 'r':
+        elif src == 'r':
             return Figure.ROOK
-        elif input == 'q':
+        elif src == 'q':
             return Figure.QUEEN
-        elif input == 'k':
+        elif src == 'k':
             return Figure.KING
         else:
-            raise "Unknown figure code: {}".format(input)
+            raise ValueError("Unknown figure code: {}".format(src))
 
-    def to_string(self) -> str:
-        if input == Figure.PAWN:
+    def __str__(self):
+        if self == Figure.PAWN:
             return "p"
-        elif input == Figure.BISHOP:
+        elif self == Figure.BISHOP:
             return "b"
-        elif input == Figure.KNIGHT:
+        elif self == Figure.KNIGHT:
             return "n"
-        elif input  == Figure.ROOK:
+        elif self == Figure.ROOK:
             return "r"
-        elif input == Figure.QUEEN:
+        elif self == Figure.QUEEN:
             return "q"
-        elif input == Figure.KING:
+        elif self == Figure.KING:
             return "k"
         else:
-            raise "Cannot serialize to string {}".format(self)
+            raise ValueError("Cannot serialize to string {}".format(self))
 
 
-class Cell(Enum):
+class Cell(object):
     color: Color
     figure: Figure
 
-    def __init__(self, color: Color = color.UNSET, figure: Figure = figure.EMPTY):
+    def __init__(self, color: Color = Color.UNSET, figure: Figure = Figure.EMPTY):
         self.color = color
         self.figure = figure
 
     def __str__(self):
-        letter = self.figure.to_string()
-        if self.color == Color.WHITE:
-            letter = letter.upper()
-        return letter
+        return self.color.colorize(str(self.figure))
 
 
 class Line:
     cells: List[Cell]
 
-    def __init__(self, input: str):
-        pass
+    def __init__(self, src: str):
 
-class Board:
-    pass
+        self.cells = []
+
+        for c in src:
+            if c.isdigit():
+                empty = int(c)
+                while empty > 0:
+                    self.cells.append(Cell())
+                    empty -= 1
+            else:
+                cell = Cell(color=Color.from_str(c), figure=Figure.from_str(c))
+                self.cells.append(cell)
+
+    def __str__(self):
+        result = ""
+        empty = 0
+        for cell in self.cells:
+            if cell.color == Color.UNSET:
+                empty += 1
+            else:
+                if empty != 0:
+                    result += str(empty)
+                    empty = 0
+                result += str(cell)
+        if empty != 0:
+            result += str(empty)
+            empty = 0
+        return result
+
+
+class Position:
+    lines: List[Line]
+
+    def __init__(self, src: str):
+        self.lines = []
+        for part in src.split('/'):
+            line = Line(part)
+            self.lines.append(line)
+
+    def __str__(self):
+        return "/".join(str(line) for line in self.lines)
+
+
+class CastlingDirection(IntFlag):
+    NOWHERE = 0
+    KINGSIDE = 1
+    QUEENSIDE = 2
+
+    @staticmethod
+    def from_str(src: str):
+        src = src.lower()
+        if src == "k":
+            return CastlingDirection.KINGSIDE
+        elif src == "q":
+            return CastlingDirection.QUEENSIDE
+        else:
+            raise ValueError("Unknown castling direction: {}".format(src))
+
+    def __str__(self):
+        result = ""
+        if self == CastlingDirection.NOWHERE:
+            pass
+        if self & CastlingDirection.KINGSIDE == CastlingDirection.KINGSIDE:
+            result += "k"
+        if self & CastlingDirection.QUEENSIDE == CastlingDirection.QUEENSIDE:
+            result += "q"
+        return result
+
+
+class Castling:
+    white: CastlingDirection
+    black: CastlingDirection
+
+    def __init__(self, src: str):
+        self.white = CastlingDirection.NOWHERE
+        self.black = CastlingDirection.NOWHERE
+        if src == "-":
+            return
+
+        for c in src:
+            if c.isupper():
+                self.white |= CastlingDirection.from_str(c)
+            elif c.islower():
+                self.black |= CastlingDirection.from_str(c)
+            else:
+                raise ValueError("Unknown castling value: {}".format(c))
+
+    def __str__(self):
+        white, black = str(self.white), str(self.black)
+        if white == "" and black == "":
+            return "-"
+        else:
+            return Color.WHITE.colorize(white) + Color.BLACK.colorize(black)
 
 
 class Record:
+    position: Position
+    activeColor: Color
     pass
