@@ -45,7 +45,7 @@ class TestRecord(unittest.TestCase):
         for case in cases:
             self.assertEqual(str(Record(case[0])), case[1])
 
-    def test_change_active_color_and_full_counter(self):
+    def test_change_active_color_and_fullmove_counter(self):
         cases = [
             (
                 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
@@ -56,6 +56,34 @@ class TestRecord(unittest.TestCase):
                 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1",
                 "e7e7",
                 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 2"
+            )
+        ]
+        for case in cases:
+            r = Record(case[0])
+            r.make_move(case[1])
+            self.assertEqual(str(r), case[2])
+
+    def test_change_halfmove(self):
+        cases = [
+            (
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+                "b1f3",
+                "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/R1BQKBNR b KQkq - 1 1"
+            ),
+            (
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+                "e2e4",
+                "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+            ),
+            (
+                "rnbqkb1r/pppppppp/8/4N3/6n1/8/PPPPPPPP/RNBQKB1R w KQkq - 4 3",
+                "e5g4",
+                "rnbqkb1r/pppppppp/8/8/6N1/8/PPPPPPPP/RNBQKB1R b KQkq - 4 3",
+            ),
+            (
+                "rnbqkb1r/pppppppp/8/4N3/6n1/8/PPPPPPPP/RNBQKB1R w KQkq - 4 3",
+                "b1f3",
+                "rnbqkb1r/pppppppp/8/4N3/6n1/5N2/PPPPPPPP/R1BQKB1R b KQkq - 5 3",
             )
         ]
         for case in cases:

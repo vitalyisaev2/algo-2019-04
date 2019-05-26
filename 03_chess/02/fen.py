@@ -200,7 +200,10 @@ class Position:
             # фигура перемещается из старой позиции в новую
             self.lines[8 - move.after.row].cells[move.after.column] = self.lines[8 - move.before.row].cells[move.before.column]
             # на старом месте появляется пустая клетка
-            self.lines[8 - move.before.row].cells[move.after.column] = Cell(coordinates=move.before)
+            self.lines[8 - move.before.row].cells[move.before.column] = Cell(coordinates=move.before)
+        
+    def get_cell(self, coordinates: Coordinates) -> Cell:
+        return self.lines[8 - coordinates.row].cells[coordinates.column]
 
 
 class CastlingDirection(IntFlag):
@@ -297,9 +300,8 @@ class Record:
                   self.en_passant, self.halfmoves, self.fullmoves)
         return " ".join(str(item) for item in fields)
 
-    def make_move(self, move: str):
-        # изменить состояние фигур
-        self.position.make_move(Move(move))
+    def make_move(self, m: str):
+        move = Move(m)
 
         # изменение очерёдности и номера хода
         if self.active_color == Color.WHITE:
@@ -307,6 +309,16 @@ class Record:
         else:
             self.active_color = Color.WHITE
             self.fullmoves += 1
+
+        # увеличение счётчика полуходов без ходов пешкой и взятий
+        src_cell = self.position.get_cell(move.before)
+        dst_cell = self.position.get_cell(move.after)
+        if src_cell.figure != Figure.PAWN and dst_cell.figure == Figure.EMPTY:
+            self.halfmoves += 1
+
+        # изменить состояние фигур на доске
+        self.position.make_move(Move(m))
+
 
 class Board:
     position: Position
