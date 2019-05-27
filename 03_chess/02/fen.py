@@ -276,6 +276,21 @@ class Castling:
         return Color.WHITE.colorize(white) + Color.BLACK.colorize(black)
 
 
+class SpecialMoves:
+
+    @staticmethod
+    def white_pawn_first_long_move(move: Move, position: Position ) -> bool:
+        figure = position.get_cell(move.before)
+        return all((move.before.row == 2, figure.figure == Figure.PAWN,
+                    figure.color == Color.WHITE, move.after.row == 4))
+
+    @staticmethod
+    def black_pawn_first_long_move(move: Move, position: Position) -> bool:
+        figure = position.get_cell(move.before)
+        return all((move.before.row == 7, figure.figure == Figure.PAWN,
+                    figure.color == Color.BLACK, move.after.row == 5))
+
+
 class EnPassant:
     coordinates: Coordinates
 
@@ -291,14 +306,12 @@ class EnPassant:
         figure = position.get_cell(move.before)
 
         # белая пешка ходит на два хода
-        if all((move.before.row == 2, figure.figure == Figure.PAWN,
-                figure.color == Color.WHITE, move.after.row == 4)):
+        if SpecialMoves.white_pawn_first_long_move(move, position):
             self.coordinates = Coordinates(row=3, column=move.before.column)
             return
 
         # черная пешка ходит на два хода
-        if all((move.before.row == 7, figure.figure == Figure.PAWN,
-                figure.color == Color.BLACK, move.after.row == 5)):
+        if SpecialMoves.black_pawn_first_long_move(move, position):
             self.coordinates = Coordinates(row=6, column=move.before.column)
             return
 

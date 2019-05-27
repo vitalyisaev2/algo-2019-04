@@ -162,7 +162,7 @@ class TestRecordMovings(unittest.TestCase):
             r.make_move(case[1])
             self.assertEqual(str(r), case[2])
 
-    def test_en_passant(self):
+    def test_en_passant_determine(self):
         cases = [
             (
                 "rnbqkbnr/ppp1pppp/8/4P3/3p4/8/PPPP1PPP/RNBQKBNR w KQkq - 0 3",
