@@ -215,6 +215,59 @@ class TestRecordMovings(unittest.TestCase):
             self.assertEqual(
                 str(r), case[2], msg="before='{}' move='{}' after='{}'".format(*case))
 
+    def test_no_castling_after_king_move(self):
+        cases = [
+            (
+                "r3k2r/pppppppp/8/N7/8/8/PPPPPPPP/R3K2R b KQkq - 0 16",
+                "e8d8",
+                "r2k3r/pppppppp/8/N7/8/8/PPPPPPPP/R3K2R w KQ - 1 17",
+            ),
+            (
+                "r2k3r/pppppppp/8/N7/8/8/PPPPPPPP/R3K2R w KQ - 1 17",
+                "e1d1",
+                "r2k3r/pppppppp/8/N7/8/8/PPPPPPPP/R2K3R b - - 2 17",
+            ),
+            (
+                "r3k2r/pppppppp/8/n7/2N5/8/PPPPPPPP/R3K2R w KQkq - 4 16",
+                "e1d1",
+                "r3k2r/pppppppp/8/n7/2N5/8/PPPPPPPP/R2K3R b kq - 5 16",
+            )
+        ]
+        for case in cases:
+            r = Record(case[0])
+            r.make_move(case[1])
+            self.assertEqual(
+                str(r), case[2], msg="before='{}' move='{}' after='{}'".format(*case))
+
+    def test_no_castling_after_rook_move(self):
+        cases = [
+            (
+                "r3k2r/pppppppp/8/N7/8/8/PPPPPPPP/R3K2R b KQkq - 0 16",
+                "a8b8",
+                "1r2k2r/pppppppp/8/N7/8/8/PPPPPPPP/R3K2R w KQk - 1 17",
+            ),
+            (
+                "1r2k2r/pppppppp/8/N7/8/8/PPPPPPPP/R3K2R w KQk - 1 17",
+                "h1g1",
+                "1r2k2r/pppppppp/8/N7/8/8/PPPPPPPP/R3K1R1 b Qk - 2 17",
+            ),
+            (
+                "1r2k2r/pppppppp/8/N7/8/8/PPPPPPPP/R3K1R1 b Qk - 2 17",
+                "h8g8",
+                "1r2k1r1/pppppppp/8/N7/8/8/PPPPPPPP/R3K1R1 w Q - 3 18",
+            ),
+            (
+                "1r2k1r1/pppppppp/8/N7/8/8/PPPPPPPP/R3K1R1 w Q - 3 18",
+                "a1c1",
+                "1r2k1r1/pppppppp/8/N7/8/8/PPPPPPPP/2R1K1R1 b - - 4 18",
+            )
+        ]
+        for case in cases:
+            r = Record(case[0])
+            r.make_move(case[1])
+            self.assertEqual(
+                str(r), case[2], msg="before='{}' move='{}' after='{}'".format(*case))
+
 
 class TestBoard(unittest.TestCase):
 

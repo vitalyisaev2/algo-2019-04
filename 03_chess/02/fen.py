@@ -442,10 +442,16 @@ class Record:
             enemy_color = Color.WHITE
             home_row_id = 0
 
-        # если король стоит не на своём месте, сразу же уходим
+        # если король или ладья стоят не на своём месте, отключаем соответственные варианты рокировки
         if self.position.lines[home_row_id].cells[4].figure != Figure.KING:
             self.castling.directions[target_color] &= CastlingDirection.NOWHERE
             return
+
+        if self.position.lines[home_row_id].cells[0].figure != Figure.ROOK:
+            self.castling.directions[target_color] &= ~CastlingDirection.QUEENSIDE
+
+        if self.position.lines[home_row_id].cells[7].figure != Figure.ROOK:
+            self.castling.directions[target_color] &= ~CastlingDirection.KINGSIDE
 
         # вычисляем позиции ячеек с фигурами чужого цвета
         enemies_on_last_line = set(i for (i, cell) in enumerate(
