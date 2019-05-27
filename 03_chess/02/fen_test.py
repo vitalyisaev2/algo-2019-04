@@ -140,21 +140,21 @@ class TestRecordMovings(unittest.TestCase):
                 "b2a1q",
                 "rnbqkbnr/pppp1ppp/4P3/8/8/8/P4PPP/qNBQKBNR w Kkq - 0 6",
             ),
-            # (
-            #     "rnbqkbnr/pppp1ppp/4P3/8/8/8/Pp3PPP/RNBQKBNR b KQkq - 0 5",
-            #     "b2a1b"
-            #     "rnbqkbnr/pppp1ppp/4P3/8/8/8/P4PPP/bNBQKBNR w Kkq - 0 6",
-            # ),
-            # (
-            #     "rnbq1bnr/pppPkppp/8/8/8/8/P4PPP/qNBQKBNR w K - 0 6"
-            #     "d7c8R",
-            #     "rnRq1bnr/ppp1kppp/8/8/8/8/P4PPP/qNBQKBNR b K - 0 7",
-            # ),
-            # (
-            #     "rnbqkbnr/pppp1ppp/4P3/8/8/8/P4PPP/qNBQKBNR w Kkq - 0 6",
-            #     "d7c8N",
-            #     "rnNq1bnr/ppp1kppp/8/8/8/8/P4PPP/qNBQKBNR b K - 0 7",
-            # ),
+            (
+                "rnbqkbnr/pppp1ppp/4P3/8/8/8/Pp3PPP/RNBQKBNR b KQkq - 0 5",
+                "b2a1b",
+                "rnbqkbnr/pppp1ppp/4P3/8/8/8/P4PPP/bNBQKBNR w Kkq - 0 6",
+            ),
+            (
+                "rnbq1bnr/pppPkppp/8/8/8/8/P4PPP/qNBQKBNR w K - 0 6",
+                "d7c8R",
+                "rnRq1bnr/ppp1kppp/8/8/8/8/P4PPP/qNBQKBNR b K - 0 6",
+            ),
+            (
+                "rnbq1bnr/pppPkppp/8/8/8/8/P4PPP/qNBQKBNR w Kkq - 0 6",
+                "d7c8N",
+                "rnNq1bnr/ppp1kppp/8/8/8/8/P4PPP/qNBQKBNR b K - 0 6",
+            ),
         ]
         for case in cases:
             r = Record(case[0])

@@ -1,5 +1,5 @@
 from enum import Enum, IntFlag
-from typing import List
+from typing import List, Dict
 import re
 
 
@@ -250,25 +250,26 @@ class CastlingDirection(IntFlag):
 
 
 class Castling:
-    white: CastlingDirection
-    black: CastlingDirection
+    directions: Dict[Color, CastlingDirection]
 
     def __init__(self, src: str):
-        self.white = CastlingDirection.NOWHERE
-        self.black = CastlingDirection.NOWHERE
+        self.directions = {
+            Color.BLACK: CastlingDirection.NOWHERE,
+            Color.WHITE: CastlingDirection.NOWHERE,
+        }
         if src == "-":
             return
 
         for c in src:
             if c.isupper():
-                self.white |= CastlingDirection.from_str(c)
+                self.directions[Color.WHITE] |= CastlingDirection.from_str(c)
             elif c.islower():
-                self.black |= CastlingDirection.from_str(c)
+                self.directions[Color.BLACK] |= CastlingDirection.from_str(c)
             else:
                 raise ValueError("Unknown castling value: {}".format(c))
 
     def __str__(self):
-        white, black = str(self.white), str(self.black)
+        white, black = str(self.directions[Color.WHITE]), str(self.directions[Color.BLACK])
         if white == "" and black == "":
             return "-"
         return Color.WHITE.colorize(white) + Color.BLACK.colorize(black)
@@ -338,19 +339,36 @@ class Record:
         self.position.make_move(Move(m))
 
         # ревизия возможностей для рокировки
-        self.__review_castling(self.castling.black, Color.WHITE, 0)
-        self.__review_castling(self.castling.white, Color.BLACK, 7)
+        self.__review_castling(Color.BLACK)
+        self.__review_castling(Color.WHITE)
 
-    def __review_castling(self, direction: CastlingDirection, enemy_color: Color, row: int):
-        enemies_on_last_line = set(i for (i, cell) in enumerate(self.position.lines[row].cells) if cell.color == enemy_color)
+    def __review_castling(self, target_color: Color):
+        if target_color == Color.WHITE:
+            enemy_color = Color.BLACK
+            home_row_id = 7
+        else:
+            enemy_color = Color.WHITE
+            home_row_id = 0
+
+        # если король стоит не на своём месте, сразу же уходим
+        if self.position.lines[home_row_id].cells[4].figure != Figure.KING:
+            self.castling.directions[target_color] &= CastlingDirection.NOWHERE
+            return
+
+        # вычисляем позиции ячеек с фигурами чужого цвета
+        enemies_on_last_line = set(i for (i, cell) in enumerate(
+            self.position.lines[home_row_id].cells) if cell.color == enemy_color)
+
         # фигуры чужого цвета поместились слева от короля
         if set((0, 1, 2, 3)).intersection(enemies_on_last_line):
-            direction &= ~CastlingDirection.QUEENSIDE
+            self.castling.directions[target_color] &= ~CastlingDirection.QUEENSIDE
+
         # фигуры чужого цвета поместились справа от короля
         if set((5, 6, 7)).intersection(enemies_on_last_line):
-            direction &= ~CastlingDirection.KINGSIDE
+            self.castling.directions[target_color] &= ~CastlingDirection.KINGSIDE
 
         
+
 
 class Board:
     position: Position
