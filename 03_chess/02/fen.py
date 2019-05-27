@@ -173,20 +173,29 @@ class Move:
 
     pattern = re.compile("([abcdefgh]{1}[1-8]{1}){2}[rnbqRNBQ]?")
 
-    def __init__(self, src: str):
+    def __init__(self, before: Coordinates, after: Coordinates, substitution: Figure = None, color: Color = None):
+        self.before = before
+        self.after = after
+        self.substitution = substitution
+        self.color = color
 
-        if not self.pattern.match(src):
+    @staticmethod
+    def from_str(src: str):
+
+        if not Move.pattern.match(src):
             raise ValueError("Unknown Move format: {}".format(src))
 
-        self.before = Coordinates.from_str(src[:2])
-        self.after = Coordinates.from_str(src[2:])
-        self.substitution = None
-        self.color = None
+        before = Coordinates.from_str(src[:2])
+        after = Coordinates.from_str(src[2:])
+        substitution = None
+        color = None
 
         # ход описывает замену пешки на последней строчке
         if len(src) == 5:
-            self.substitution = Figure.from_str(src[-1])
-            self.color = Color.from_case(src[-1])
+            substitution = Figure.from_str(src[-1])
+            color = Color.from_case(src[-1])
+
+        return Move(before, after, substitution, color)
 
     @property
     def dummy(self) -> bool:
@@ -352,6 +361,28 @@ def black_pawn_attack(move: Move, position: Position) -> bool:
     )
 
 
+def check_castling(move: Move, position: Position) -> (Move, CastlingDirection):
+    supp_move, direction = None, None
+
+    # kingside
+    if all(
+        (
+            move.before.row == move.after.row,
+            move.before.row in (1, 8),
+            move.before.column == 4,
+            move.after.column == 6,
+            position.get_cell(move.before).figure == Figure.KING
+        )
+    ):
+        supp_move = Move(
+            before=Coordinates(row=move.before.row, column=7),
+            after=Coordinates(row=move.before.row, column=5),
+        )
+        direction = CastlingDirection.KINGSIDE
+
+    return (supp_move, direction)
+
+
 def white_pawn_takes_black_en_passant(move: Move, position: Position, en_passant: EnPassant) -> Coordinates:
     if all((white_pawn_attack(move, position),
             en_passant.coordinates is not None and en_passant.coordinates == move.after)
@@ -395,7 +426,7 @@ class Record:
         return " ".join(str(item) for item in fields)
 
     def make_move(self, m: str):
-        move = Move(m)
+        move = Move.from_str(m)
 
         # изменение очерёдности и номера хода
         if self.active_color == Color.WHITE:
@@ -417,6 +448,9 @@ class Record:
             victim = black_pawn_takes_white_en_passant(
                 move, self.position, self.en_passant)
 
+        # проверяем, не выполняется ли рокировка
+        castiling_move, castling_direction = check_castling(move, self.position)
+
         if victim is not None:
             # изменить состояние фигур на доске
             self.position.move_figure(move)
@@ -424,6 +458,10 @@ class Record:
             self.position.empty_cell(victim)
             # битое поле очищается
             self.en_passant.coordinates = None
+        elif castiling_move is not None:
+            self.position.move_figure(move)
+            self.position.move_figure(castiling_move)
+            raise RuntimeError("not implemented")
         else:
             # фиксация битого поля
             self.en_passant.update(move, self.position)
