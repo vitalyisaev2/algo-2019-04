@@ -212,7 +212,7 @@ class Position:
                 self.lines[8 - move.after.row].cells[move.after.column] = \
                     self.lines[8 - move.before.row].cells[move.before.column]
             else:
-                # в новой позиции пешка заменяется на желаемую фигуру
+                # случай с превращением: в новой позиции пешка заменяется на желаемую фигуру
                 self.lines[8 - move.after.row].cells[move.after.column] = Cell(
                     coordinates=move.after, color=move.color, figure=move.substitution)
 
@@ -276,21 +276,6 @@ class Castling:
         return Color.WHITE.colorize(white) + Color.BLACK.colorize(black)
 
 
-class SpecialMoves:
-
-    @staticmethod
-    def white_pawn_first_long_move(move: Move, position: Position ) -> bool:
-        figure = position.get_cell(move.before)
-        return all((move.before.row == 2, figure.figure == Figure.PAWN,
-                    figure.color == Color.WHITE, move.after.row == 4))
-
-    @staticmethod
-    def black_pawn_first_long_move(move: Move, position: Position) -> bool:
-        figure = position.get_cell(move.before)
-        return all((move.before.row == 7, figure.figure == Figure.PAWN,
-                    figure.color == Color.BLACK, move.after.row == 5))
-
-
 class EnPassant:
     coordinates: Coordinates
 
@@ -303,15 +288,14 @@ class EnPassant:
             raise ValueError("Unknown EnPassant value: {}".format(src))
 
     def update(self, move: Move, position: Position):
-        figure = position.get_cell(move.before)
 
         # белая пешка ходит на два хода
-        if SpecialMoves.white_pawn_first_long_move(move, position):
+        if white_pawn_first_long_move(move, position):
             self.coordinates = Coordinates(row=3, column=move.before.column)
             return
 
         # черная пешка ходит на два хода
-        if SpecialMoves.black_pawn_first_long_move(move, position):
+        if black_pawn_first_long_move(move, position):
             self.coordinates = Coordinates(row=6, column=move.before.column)
             return
 
@@ -321,6 +305,52 @@ class EnPassant:
         if self.coordinates is None:
             return "-"
         return str(self.coordinates)
+
+
+# функции, проверяющие различные специальные условия
+
+def white_pawn_first_long_move(move: Move, position: Position) -> bool:
+    figure = position.get_cell(move.before)
+    return all((move.before.row == 2, figure.figure == Figure.PAWN,
+                figure.color == Color.WHITE, move.after.row == 4))
+
+
+def black_pawn_first_long_move(move: Move, position: Position) -> bool:
+    figure = position.get_cell(move.before)
+    return all((move.before.row == 7, figure.figure == Figure.PAWN,
+                figure.color == Color.BLACK, move.after.row == 5))
+
+
+def white_pawn_attack(move: Move, position: Position) -> bool:
+    return all(
+        (
+            move.before.row < 8,
+            move.after.row == move.before.row + 1,
+            (move.after.column == move.before.column - 1) or
+            (move.after.column == move.before.column + 1)
+        )
+    )
+
+
+def black_pawn_attack(move: Move, position: Position) -> bool:
+    return all(
+        (
+            move.before.row > 1,
+            move.after.row == move.before.row - 1,
+            (move.after.column == move.before.column - 1) or
+            (move.after.column == move.before.column + 1)
+        )
+    )
+
+
+def white_pawn_takes_black_en_passant(move: Move, position: Position, en_passant: EnPassant) -> bool:
+    return all(
+        (
+            white_pawn_attack(move, position),
+            en_passant.coordinates is not None,
+            en_passant.coordinates == move.after,
+        )
+    )
 
 
 class Record:
