@@ -76,7 +76,7 @@ class TestRecordMoveCounters(unittest.TestCase):
             (
                 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
                 "e2e4",
-                "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+                "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
             ),
             (
                 "rnbqkb1r/pppppppp/8/4N3/6n1/8/PPPPPPPP/RNBQKB1R w KQkq - 4 3",
@@ -92,7 +92,8 @@ class TestRecordMoveCounters(unittest.TestCase):
         for case in cases:
             r = Record(case[0])
             r.make_move(case[1])
-            self.assertEqual(str(r), case[2])
+            self.assertEqual(
+                str(r), case[2], msg="before='{}' move='{}' after='{}'".format(*case))
 
 
 class TestRecordMovings(unittest.TestCase):
@@ -160,6 +161,30 @@ class TestRecordMovings(unittest.TestCase):
             r = Record(case[0])
             r.make_move(case[1])
             self.assertEqual(str(r), case[2])
+
+    def test_en_passant(self):
+        cases = [
+            (
+                "rnbqkbnr/ppp1pppp/8/4P3/3p4/8/PPPP1PPP/RNBQKBNR w KQkq - 0 3",
+                "c2c4",
+                "rnbqkbnr/ppp1pppp/8/4P3/2Pp4/8/PP1P1PPP/RNBQKBNR b KQkq c3 0 3",
+            ),
+            (
+                "rnbqkbnr/ppp1pppp/8/4P3/2Pp4/8/PP1P1PPP/RNBQKBNR b KQkq c3 0 3",
+                "f7f5",
+                "rnbqkbnr/ppp1p1pp/8/4Pp2/2Pp4/8/PP1P1PPP/RNBQKBNR w KQkq f6 0 4",
+            ),
+            (
+                "rnbqkbnr/ppp1pppp/8/8/3p4/N6N/PPPPPPPP/R1BQKB1R w KQkq - 0 3",
+                "b2b4",
+                "rnbqkbnr/ppp1pppp/8/8/1P1p4/N6N/P1PPPPPP/R1BQKB1R b KQkq b3 0 3",
+            )
+        ]
+        for case in cases:
+            r = Record(case[0])
+            r.make_move(case[1])
+            self.assertEqual(
+                str(r), case[2], msg="before='{}' move='{}' after='{}'".format(*case))
 
 
 class TestBoard(unittest.TestCase):

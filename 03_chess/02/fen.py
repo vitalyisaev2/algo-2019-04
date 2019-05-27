@@ -91,7 +91,7 @@ class Coordinates:
     def __init__(self, row: int, column: int):
         self.row = row
         if not type(column) == int:
-            raise "AAA"
+            raise ValueError("column must be int, not '{}'".format(column))
         self.column = column
 
     @staticmethod
@@ -106,7 +106,7 @@ class Coordinates:
 
     def __str__(self):
         column = chr(ord('a') + self.column)
-        return str(self.row) + column
+        return column+str(self.row)
 
 
 class Cell:
@@ -269,7 +269,8 @@ class Castling:
                 raise ValueError("Unknown castling value: {}".format(c))
 
     def __str__(self):
-        white, black = str(self.directions[Color.WHITE]), str(self.directions[Color.BLACK])
+        white = str(self.directions[Color.WHITE])
+        black = str(self.directions[Color.BLACK])
         if white == "" and black == "":
             return "-"
         return Color.WHITE.colorize(white) + Color.BLACK.colorize(black)
@@ -282,10 +283,26 @@ class EnPassant:
         if src == "-":
             self.coordinates = None
         elif len(src) == 2:
-            column, row = src[0], int(src[1])
-            self.coordinates = Coordinates(row, column)
+            self.coordinates = Coordinates.from_str(src)
         else:
             raise ValueError("Unknown EnPassant value: {}".format(src))
+
+    def update(self, move: Move, position: Position):
+        figure = position.get_cell(move.before)
+
+        # белая пешка ходит на два хода
+        if all((move.before.row == 2, figure.figure == Figure.PAWN,
+                figure.color == Color.WHITE, move.after.row == 4)):
+            self.coordinates = Coordinates(row=3, column=move.before.column)
+            return
+
+        # черная пешка ходит на два хода
+        if all((move.before.row == 7, figure.figure == Figure.PAWN,
+                figure.color == Color.BLACK, move.after.row == 5)):
+            self.coordinates = Coordinates(row=6, column=move.before.column)
+            return
+
+        self.coordinates = None
 
     def __str__(self):
         if self.coordinates is None:
@@ -335,6 +352,9 @@ class Record:
         if src_cell.figure != Figure.PAWN and dst_cell.figure == Figure.EMPTY:
             self.halfmoves += 1
 
+        # фиксация битого поля
+        self.en_passant.update(move, self.position)
+
         # изменить состояние фигур на доске
         self.position.make_move(Move(m))
 
@@ -366,8 +386,6 @@ class Record:
         # фигуры чужого цвета поместились справа от короля
         if set((5, 6, 7)).intersection(enemies_on_last_line):
             self.castling.directions[target_color] &= ~CastlingDirection.KINGSIDE
-
-        
 
 
 class Board:
