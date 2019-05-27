@@ -205,7 +205,10 @@ class Position:
     def __str__(self):
         return "/".join(str(line) for line in self.lines)
 
-    def make_move(self, move: Move):
+    def move_figure(self, move: Move):
+        """
+        Передвигает имеющуюся фигуру с одного места на другое. На старом месте возникает пустая клетка.
+        """
         if not move.dummy:
             if move.substitution is None:
                 # фигура перемещается из старой позиции в новую
@@ -217,8 +220,14 @@ class Position:
                     coordinates=move.after, color=move.color, figure=move.substitution)
 
             # на старом месте появляется пустая клетка
-            self.lines[8 - move.before.row].cells[move.before.column] = Cell(
-                coordinates=move.before)
+            self.empty_cell(move.before)
+
+    def empty_cell(self, coordinates: Coordinates):
+        """
+        Опустошает указанную клетку
+        """
+        cell = Cell(coordinates=coordinates, figure=Figure.EMPTY)
+        self.lines[8 - coordinates.row].cells[coordinates.column] = cell
 
     def get_cell(self, coordinates: Coordinates) -> Cell:
         return self.lines[8 - coordinates.row].cells[coordinates.column]
@@ -343,14 +352,20 @@ def black_pawn_attack(move: Move, position: Position) -> bool:
     )
 
 
-def white_pawn_takes_black_en_passant(move: Move, position: Position, en_passant: EnPassant) -> bool:
-    return all(
-        (
-            white_pawn_attack(move, position),
-            en_passant.coordinates is not None,
-            en_passant.coordinates == move.after,
-        )
-    )
+def white_pawn_takes_black_en_passant(move: Move, position: Position, en_passant: EnPassant) -> Coordinates:
+    if all((white_pawn_attack(move, position),
+            en_passant.coordinates is not None and en_passant.coordinates == move.after)
+           ):
+        return Coordinates(row=en_passant.coordinates.row-1, column=en_passant.coordinates.column)
+    return None
+
+
+def black_pawn_takes_white_en_passant(move: Move, position: Position, en_passant: EnPassant) -> Coordinates:
+    if all((black_pawn_attack(move, position),
+            en_passant.coordinates is not None and en_passant.coordinates == move.after)
+           ):
+        return Coordinates(row=en_passant.coordinates.row+1, column=en_passant.coordinates.column)
+    return None
 
 
 class Record:
@@ -395,11 +410,25 @@ class Record:
         if src_cell.figure != Figure.PAWN and dst_cell.figure == Figure.EMPTY:
             self.halfmoves += 1
 
-        # фиксация битого поля
-        self.en_passant.update(move, self.position)
+        # проверяем, не взяла ли одна пешка другую на проходе
+        victim = white_pawn_takes_black_en_passant(
+            move, self.position, self.en_passant)
+        if victim is None:
+            victim = black_pawn_takes_white_en_passant(
+                move, self.position, self.en_passant)
 
-        # изменить состояние фигур на доске
-        self.position.make_move(Move(m))
+        if victim is not None:
+            # изменить состояние фигур на доске
+            self.position.move_figure(move)
+            # сделать пустым поле пешки
+            self.position.empty_cell(victim)
+            # битое поле очищается
+            self.en_passant.coordinates = None
+        else:
+            # фиксация битого поля
+            self.en_passant.update(move, self.position)
+            # изменить состояние фигур на доске
+            self.position.move_figure(move)
 
         # ревизия возможностей для рокировки
         self.__review_castling(Color.BLACK)

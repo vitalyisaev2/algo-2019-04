@@ -186,6 +186,35 @@ class TestRecordMovings(unittest.TestCase):
             self.assertEqual(
                 str(r), case[2], msg="before='{}' move='{}' after='{}'".format(*case))
 
+    def test_en_passant_capture(self):
+        cases = [
+            (
+                "rnbqkbnr/ppp1pppp/8/4P3/2Pp4/8/PP1P1PPP/RNBQKBNR b KQkq c3 0 3",
+                "d4c3",
+                "rnbqkbnr/ppp1pppp/8/4P3/8/2p5/PP1P1PPP/RNBQKBNR w KQkq - 0 4",
+            ),
+            (
+                "r1bqkbnr/ppp1p1pp/2n5/4PpP1/8/2p5/PP1P1P1P/RNBQKBNR w KQkq f6 0 6",
+                "g5f6",
+                "r1bqkbnr/ppp1p1pp/2n2P2/4P3/8/2p5/PP1P1P1P/RNBQKBNR b KQkq - 0 6",
+            ),
+            (
+                "r1bqkbnr/ppp1p1pp/2n5/4PpP1/8/2p5/PP1P1P1P/RNBQKBNR w KQkq f6 0 6",
+                "e5f6",
+                "r1bqkbnr/ppp1p1pp/2n2P2/6P1/8/2p5/PP1P1P1P/RNBQKBNR b KQkq - 0 6",
+            ),
+            (
+                "r2qkbnr/pppbp2p/2n2p2/4PpP1/8/2p2N2/PP1P1P1P/RNBQK2R w KQkq - 0 9",
+                "e5f6",
+                "r2qkbnr/pppbp2p/2n2P2/5pP1/8/2p2N2/PP1P1P1P/RNBQK2R b KQkq - 0 9",
+            )
+        ]
+        for case in cases:
+            r = Record(case[0])
+            r.make_move(case[1])
+            self.assertEqual(
+                str(r), case[2], msg="before='{}' move='{}' after='{}'".format(*case))
+
 
 class TestBoard(unittest.TestCase):
 
