@@ -1,3 +1,4 @@
 *.ro
 build
 .vscode
+__pycache__
