@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from enum import Enum, IntFlag
 from typing import List, Dict
 import re
@@ -361,10 +363,12 @@ def black_pawn_attack(move: Move, position: Position) -> bool:
     )
 
 
-def check_castling(move: Move, position: Position) -> (Move, CastlingDirection):
-    supp_move, direction = None, None
+def check_castling(move: Move, position: Position) -> (Move, CastlingDirection, Color):
+    supp_move = None
+    direction = None
+    color = position.get_cell(move.before).color
 
-    # kingside
+    # короткая
     if all(
         (
             move.before.row == move.after.row,
@@ -380,7 +384,23 @@ def check_castling(move: Move, position: Position) -> (Move, CastlingDirection):
         )
         direction = CastlingDirection.KINGSIDE
 
-    return (supp_move, direction)
+    # длинная
+    elif all(
+        (
+            move.before.row == move.after.row,
+            move.before.row in (1, 8),
+            move.before.column == 4,
+            move.after.column == 2,
+            position.get_cell(move.before).figure == Figure.KING
+        )
+    ):
+        supp_move = Move(
+            before=Coordinates(row=move.before.row, column=0),
+            after=Coordinates(row=move.before.row, column=3),
+        )
+        direction = CastlingDirection.QUEENSIDE
+
+    return (supp_move, direction, color)
 
 
 def white_pawn_takes_black_en_passant(move: Move, position: Position, en_passant: EnPassant) -> Coordinates:
@@ -449,7 +469,8 @@ class Record:
                 move, self.position, self.en_passant)
 
         # проверяем, не выполняется ли рокировка
-        castiling_move, castling_direction = check_castling(move, self.position)
+        castiling_move, castling_direction, castling_color = check_castling(
+            move, self.position)
 
         if victim is not None:
             # изменить состояние фигур на доске
@@ -461,7 +482,7 @@ class Record:
         elif castiling_move is not None:
             self.position.move_figure(move)
             self.position.move_figure(castiling_move)
-            raise RuntimeError("not implemented")
+            self.castling.directions[castling_color] &= ~castling_direction
         else:
             # фиксация битого поля
             self.en_passant.update(move, self.position)
@@ -527,3 +548,10 @@ class Board:
         result.append(self._header())
         result.append(self._footer())
         return "\n".join(result)
+
+
+if __name__ == "__main__":
+    record = Record(input())
+    print(Board(record.position))
+    record.make_move(input())
+    print(Board(record.position))
