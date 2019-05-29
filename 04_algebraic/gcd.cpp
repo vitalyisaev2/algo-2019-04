@@ -34,11 +34,3 @@ int gcd_mod(int a, int b)
         b = k;
     }
 }
-
-int gcd_mod_recursive(int a, int b)
-{
-    if (b == 0) {
-        return a;
-    }
-    return gcd_mod_recursive(b, a % b);
-}

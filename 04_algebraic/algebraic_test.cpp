@@ -12,9 +12,14 @@ TEST_CASE("Greatest common divisor")
     {
         REQUIRE(gcd_mod(1071, 462) == 21);
     }
+}
 
-    SECTION("mod_recursive")
-    {
-        REQUIRE(gcd_mod_recursive(1071, 462) == 21);
+TEST_CASE("Power")
+{
+    SECTION("iterative") {
+        REQUIRE(power_iterative(2, 10) == 1024);
+    }
+    SECTION("binary") {
+        REQUIRE(power_binary(2, 10) == 1024);
     }
 }
