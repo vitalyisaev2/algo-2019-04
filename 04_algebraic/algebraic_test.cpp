@@ -1,7 +1,7 @@
 #include "algebraic.hpp"
 #include <catch2/catch.hpp>
 
-TEST_CASE("Greatest common divisor")
+TEST_CASE("GCD")
 {
     SECTION("sub")
     {
@@ -14,12 +14,18 @@ TEST_CASE("Greatest common divisor")
     }
 }
 
-TEST_CASE("Power")
+TEST_CASE("Exponentiation")
 {
-    SECTION("iterative") {
+    SECTION("iterative")
+    {
         REQUIRE(power_iterative(2, 10) == 1024);
     }
-    SECTION("binary") {
-        REQUIRE(power_binary(2, 10) == 1024);
+    SECTION("via power of two")
+    {
+        REQUIRE(power_via_power_of_two(2, 10) == 1024);
+    }
+    SECTION("via exponent binary partition")
+    {
+        REQUIRE(power_via_exponent_binary_partition(2, 10) == 1024);
     }
 }

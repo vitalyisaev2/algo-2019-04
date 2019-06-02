@@ -4,7 +4,7 @@
 
 // greatest common divisor
 
-using gcd_func = std::function<int(int, int)>;
+using gcd_func = std::function<long(long, int)>;
 
 const int gcd_divisor = 8;
 
@@ -49,10 +49,16 @@ static void BM_04_power_iterative(benchmark::State& state)
     power(state, power_iterative);
 }
 
-static void BM_04_power_binary(benchmark::State& state)
+static void BM_04_power_via_power_of_two(benchmark::State& state)
 {
-    power(state, power_binary);
+    power(state, power_via_power_of_two);
 }
 
-BENCHMARK(BM_04_power_iterative)->RangeMultiplier(2)->Range(1 << 4, 1 << 18)->Complexity(benchmark::oN);
-BENCHMARK(BM_04_power_binary)->RangeMultiplier(2)->Range(1 << 4, 1 << 18)->Complexity(benchmark::oN);
+static void BM_04_power_via_exponent_binary_partition(benchmark::State& state)
+{
+    power(state, power_via_exponent_binary_partition);
+}
+
+BENCHMARK(BM_04_power_iterative)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_power_via_power_of_two)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_power_via_exponent_binary_partition)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
