@@ -4,7 +4,7 @@
 
 // greatest common divisor
 
-using gcd_func = std::function<long(long, int)>;
+using gcd_func = std::function<int(int, int)>;
 
 const int gcd_divisor = 8;
 
@@ -31,7 +31,7 @@ BENCHMARK(BM_04_gcd_mod)->RangeMultiplier(2)->Range(1 << 4, 1 << 18)->Complexity
 
 // power (exponentiation)
 
-using power_func = std::function<int(int, int)>;
+using power_func = std::function<int(int, unsigned int)>;
 
 const int power_base = 2;
 
@@ -59,6 +59,12 @@ static void BM_04_power_via_exponent_binary_partition(benchmark::State& state)
     power(state, power_via_exponent_binary_partition);
 }
 
+static void BM_04_power_via_exponent_binary_partition_with_gcc_extentions(benchmark::State& state)
+{
+    power(state, power_via_exponent_binary_partition_with_gcc_extentions);
+}
+
 BENCHMARK(BM_04_power_iterative)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
 BENCHMARK(BM_04_power_via_power_of_two)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
 BENCHMARK(BM_04_power_via_exponent_binary_partition)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_power_via_exponent_binary_partition_with_gcc_extentions)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);

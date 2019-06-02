@@ -28,4 +28,10 @@ TEST_CASE("Exponentiation")
     {
         REQUIRE(power_via_exponent_binary_partition(2, 10) == 1024);
     }
+    #ifdef _GNUC_
+    SECTION("via exponent binary partition")
+    {
+        REQUIRE(power_via_exponent_binary_partition_with_gcc_extentions(2, 10) == 1024);
+    }
+    #endif
 }
