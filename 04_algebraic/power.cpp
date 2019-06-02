@@ -1,5 +1,4 @@
 #include "algebraic.hpp"
-#include <iostream>
 
 int power_iterative(int base, unsigned int exponent)
 {

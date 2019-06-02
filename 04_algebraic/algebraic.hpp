@@ -17,9 +17,22 @@ int power_via_power_of_two(int base, unsigned int exponent);
 int power_via_exponent_binary_partition(int base, unsigned int exponent);
 
 #ifdef __GNUC__
-// power_via_exponent_binary_partition - возведение в степень через бинарное разложение показателя степени
+// power_via_exponent_binary_partition_with_gcc_extentions - 
+// возведение в степень через бинарное разложение показателя степени
 // с привлечением оптимизаций, встроенных в компилятор GCC
 int power_via_exponent_binary_partition_with_gcc_extentions(int base, unsigned int exponent);
 #endif
+
+// fibonacci_recursive - рекурсивный алгоритм вычисления чисел Фибоначчи
+int fibonacci_recursive(int n); 
+
+// fibonacci_iterative - итеративный алгоритм вычисления чисел Фибоначчи
+int fibonacci_iterative(int n);
+
+// fibonacci_golden_ratio - алгоритм вычисления чисел Фибоначчи через золотое сечение
+int fibonacci_golden_ratio(int n);
+
+// fibonacci_matrix - алгоритм вычисления чисел Фибоначчи через перемножение матриц
+int fibonacci_matrix(int n);
 
 #endif

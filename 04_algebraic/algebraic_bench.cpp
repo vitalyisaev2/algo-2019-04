@@ -67,4 +67,38 @@ static void BM_04_power_via_exponent_binary_partition_with_gcc_extentions(benchm
 BENCHMARK(BM_04_power_iterative)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
 BENCHMARK(BM_04_power_via_power_of_two)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
 BENCHMARK(BM_04_power_via_exponent_binary_partition)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
-BENCHMARK(BM_04_power_via_exponent_binary_partition_with_gcc_extentions)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_power_via_exponent_binary_partition_with_gcc_extentions)
+    ->RangeMultiplier(2)
+    ->Range(1 << 4, 1 << 20)
+    ->Complexity(benchmark::oN);
+
+// fibonacci
+
+using fibonacci_func = std::function<int(int)>;
+
+static void fibonacci(benchmark::State& state, fibonacci_func f)
+{
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(f(state.range(0)));
+    }
+    state.SetComplexityN(state.range(0));
+}
+
+static void BM_04_fibonacci_recursive(benchmark::State& state)
+{
+    fibonacci(state, fibonacci_recursive);
+}
+
+static void BM_04_fibonacci_iterative(benchmark::State& state)
+{
+    fibonacci(state, fibonacci_iterative);
+}
+
+static void BM_04_fibonacci_golden_ratio(benchmark::State& state)
+{
+    fibonacci(state, fibonacci_golden_ratio);
+}
+
+BENCHMARK(BM_04_fibonacci_recursive)->Arg(1)->Arg(5)->Arg(10)->Arg(20)->Arg(30)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_fibonacci_iterative)->Arg(1)->Arg(5)->Arg(10)->Arg(20)->Arg(30)->Arg(50)->Arg(100)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_fibonacci_golden_ratio)->Arg(1)->Arg(5)->Arg(10)->Arg(20)->Arg(30)->Arg(50)->Arg(100)->Complexity(benchmark::oN);
