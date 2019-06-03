@@ -16,27 +16,24 @@ TEST_CASE("GCD")
 
 TEST_CASE("Exponentiation")
 {
-    using func   = std::function<int(int, unsigned int)>;
-    auto section = [](func f, const char* name) {
+    auto section = [](power_func<int> f, const char* name) {
         SECTION(name)
         {
             REQUIRE(f(2, 10) == 1024);
         }
     };
 
-    section(power_iterative, "iterative");
+    section(power_iterative<int>, "iterative");
     section(power_via_power_of_two<int>, "via power of two");
-    section(power_via_exponent_binary_partition, "via exponent binary partition");
+    section(power_via_exponent_binary_partition<int>, "via exponent binary partition");
 #ifdef _GNUC_
-    section(power_via_exponent_binary_partition_with_gcc_extentions, "via exponent binary partition with GCC extentions");
+    section(power_via_exponent_binary_partition_with_gcc_extentions<int>, "via exponent binary partition with GCC extentions");
 #endif
 }
 
 TEST_CASE("Fibonacci")
 {
-    using func = std::function<int(int)>;
-
-    auto section = [](func f, const char* name) {
+    auto section = [](fibonacci_func<int, int> f, const char* name) {
         SECTION(name)
         {
             REQUIRE(f(0) == 0);
@@ -52,8 +49,8 @@ TEST_CASE("Fibonacci")
         }
     };
 
-    section(fibonacci_recursive, "recursive");
-    section(fibonacci_iterative, "iterative");
-    section(fibonacci_golden_ratio, "golden_ratio");
-    section(fibonacci_matrix, "golden_ratio");
+    section(fibonacci_recursive<int, int>, "recursive");
+    section(fibonacci_iterative<int, int>, "iterative");
+    section(fibonacci_golden_ratio<int, int>, "golden_ratio");
+    section(fibonacci_matrix<int, int>, "golden_ratio");
 }
