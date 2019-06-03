@@ -99,6 +99,68 @@ static void BM_04_fibonacci_matrix(benchmark::State& state)
 }
 
 BENCHMARK(BM_04_fibonacci_recursive)->Arg(1)->Arg(5)->Arg(10)->Arg(20)->Arg(30)->Complexity(benchmark::oN);
-BENCHMARK(BM_04_fibonacci_iterative)->Arg(1)->Arg(5)->Arg(10)->Arg(20)->Arg(30)->Arg(50)->Arg(100)->Arg(500)->Arg(1000)->Complexity(benchmark::oN);
-BENCHMARK(BM_04_fibonacci_golden_ratio)->Arg(1)->Arg(5)->Arg(10)->Arg(20)->Arg(30)->Arg(50)->Arg(100)->Arg(500)->Arg(1000)->Complexity(benchmark::oN);
-BENCHMARK(BM_04_fibonacci_matrix)->Arg(1)->Arg(5)->Arg(10)->Arg(20)->Arg(30)->Arg(50)->Arg(100)->Arg(500)->Arg(1000)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_fibonacci_iterative)
+    ->Arg(1)
+    ->Arg(5)
+    ->Arg(10)
+    ->Arg(20)
+    ->Arg(30)
+    ->Arg(50)
+    ->Arg(100)
+    ->Arg(500)
+    ->Arg(1000)
+    ->Complexity(benchmark::oN);
+BENCHMARK(BM_04_fibonacci_golden_ratio)
+    ->Arg(1)
+    ->Arg(5)
+    ->Arg(10)
+    ->Arg(20)
+    ->Arg(30)
+    ->Arg(50)
+    ->Arg(100)
+    ->Arg(500)
+    ->Arg(1000)
+    ->Complexity(benchmark::oN);
+BENCHMARK(BM_04_fibonacci_matrix)
+    ->Arg(1)
+    ->Arg(5)
+    ->Arg(10)
+    ->Arg(20)
+    ->Arg(30)
+    ->Arg(50)
+    ->Arg(100)
+    ->Arg(500)
+    ->Arg(1000)
+    ->Complexity(benchmark::oN);
+
+// prime numbers
+
+static void prime_numbers(benchmark::State& state, prime_numbers_func<int> f)
+{
+    std::vector<int> rcv;
+    for (auto _ : state) {
+        state.PauseTiming();
+        rcv.clear();
+        state.ResumeTiming();
+        f(state.range(0), rcv);
+    }
+    state.SetComplexityN(state.range(0));
+}
+
+static void BM_04_prime_numbers_bruteforce(benchmark::State& state)
+{
+    prime_numbers(state, prime_numbers_bruteforce<int>);
+}
+
+BENCHMARK(BM_04_prime_numbers_bruteforce)
+    ->Arg(1)
+    ->Arg(5)
+    ->Arg(10)
+    ->Arg(20)
+    ->Arg(30)
+    ->Arg(50)
+    ->Arg(100)
+    ->Arg(500)
+    ->Arg(1000)
+    ->Arg(5000)
+    ->Complexity(benchmark::oN);

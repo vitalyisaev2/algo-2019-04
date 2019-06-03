@@ -1,5 +1,6 @@
 #include "algebraic.hpp"
 #include <catch2/catch.hpp>
+#include <tuple>
 
 TEST_CASE("GCD")
 {
@@ -53,4 +54,33 @@ TEST_CASE("Fibonacci")
     section(fibonacci_iterative<int, int>, "iterative");
     section(fibonacci_golden_ratio<int, int>, "golden_ratio");
     section(fibonacci_matrix<int, int>, "golden_ratio");
+}
+
+TEST_CASE("Prime numbers")
+{
+    auto section = [](prime_numbers_func<int> f, const char* name) {
+        SECTION(name)
+        {
+            std::vector<std::tuple<int, std::vector<int>>> cases = {
+                {0, {}},
+                {1, {1}},
+                {2, {1, 2}},
+                {3, {1, 2, 3}},
+                {4, {1, 2, 3}},
+                {5, {1, 2, 3, 5}},
+            };
+
+            for (const auto& c : cases) {
+                auto             n = std::get<0>(c);
+                std::vector<int> actual;
+                std::vector<int> expected = std::get<1>(c);
+                // std::cout << "N: " << n << std::endl;
+                f(n, actual);
+                REQUIRE(actual == expected);
+            }
+
+        }
+    };
+
+    section(prime_numbers_bruteforce<int>, "bruteforce");
 }

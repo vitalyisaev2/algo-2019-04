@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <vector>
 
+// --------- Greatest commond divisor ------------
+
 // gcd_func - тип функции вычисления наибольшего общего делителя
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
 using gcd_func = std::function<T(T, T)>;
@@ -48,6 +50,8 @@ T gcd_mod(T a, T b)
         b = k;
     }
 }
+
+// --------- Exponentiation ------------
 
 // power_func - тип функции для вычисления степени
 template <typename T>
@@ -130,6 +134,8 @@ T power_via_exponent_binary_partition_with_gcc_extentions(T base, unsigned int e
     return result;
 }
 #endif
+
+// --------- Fibonacci numbers ------------
 
 // fibonacci_func - тип функции для вычисления чисел Фибоначчи
 template <typename T, typename N, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<N>>>
@@ -232,3 +238,35 @@ T fibonacci_matrix(N n)
 }
 
 #endif
+
+// --------- Prime numbers ------------
+
+template <typename T>
+using prime_numbers_func = std::function<void(T, std::vector<T>&)>;
+
+template <typename T>
+void prime_numbers_bruteforce(T n, std::vector<T>& result)
+{
+    if (n == 0) {
+        return;
+    }
+
+    result.push_back(1);
+
+    if (n == 1) {
+        return;
+    }
+
+    for (int i = 2; i <= n; i++) {
+        bool is_prime = true;
+        for (int j = 2; j < i - 1; j++) {
+            if (i % j == 0) {
+                is_prime = false;
+                break;
+            }
+        }
+        if (is_prime) {
+            result.push_back(i);
+        }
+    }
+}
