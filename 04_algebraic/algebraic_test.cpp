@@ -14,21 +14,21 @@ TEST_CASE("GCD")
     }
 }
 
-TEST_CASE("Exponentiation"){SECTION("iterative"){REQUIRE(power_iterative(2, 10) == 1024);
-}
-SECTION("via power of two")
+TEST_CASE("Exponentiation")
 {
-    REQUIRE(power_via_power_of_two(2, 10) == 1024);
-}
-SECTION("via exponent binary partition")
-{
-    REQUIRE(power_via_exponent_binary_partition(2, 10) == 1024);
-}
+    using func   = std::function<int(int, unsigned int)>;
+    auto section = [](func f, const char* name) {
+        SECTION(name)
+        {
+            REQUIRE(f(2, 10) == 1024);
+        }
+    };
+
+    section(power_iterative, "iterative");
+    section(power_via_power_of_two<int>, "via power of two");
+    section(power_via_exponent_binary_partition, "via exponent binary partition");
 #ifdef _GNUC_
-SECTION("via exponent binary partition")
-{
-    REQUIRE(power_via_exponent_binary_partition_with_gcc_extentions(2, 10) == 1024);
-}
+    section(power_via_exponent_binary_partition_with_gcc_extentions, "via exponent binary partition with GCC extentions");
 #endif
 }
 
@@ -55,4 +55,5 @@ TEST_CASE("Fibonacci")
     section(fibonacci_recursive, "recursive");
     section(fibonacci_iterative, "iterative");
     section(fibonacci_golden_ratio, "golden_ratio");
+    section(fibonacci_matrix, "golden_ratio");
 }

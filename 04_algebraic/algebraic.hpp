@@ -11,7 +11,19 @@ int gcd_mod(int a, int b);
 int power_iterative(int base, unsigned int exponent);
 
 // power_via_power_of_2 - возведение в степень через степень двойки с умножением
-int power_via_power_of_two(int base, unsigned int exponent);
+template <typename T>
+T power_via_power_of_two(T base, unsigned int exponent)
+{
+    if (exponent == 0) {
+        return T(1);
+    }
+    if (exponent % 2 == 1) {
+        return power_via_power_of_two(base, exponent - 1) * base;
+    }
+    T result = power_via_power_of_two(base, exponent / 2);
+    return result * result;
+}
+
 
 // power_via_exponent_binary_partition - возведение в степень через бинарное разложение показателя степени
 int power_via_exponent_binary_partition(int base, unsigned int exponent);

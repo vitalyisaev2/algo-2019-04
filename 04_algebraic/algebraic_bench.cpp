@@ -51,7 +51,7 @@ static void BM_04_power_iterative(benchmark::State& state)
 
 static void BM_04_power_via_power_of_two(benchmark::State& state)
 {
-    power(state, power_via_power_of_two);
+    power(state, power_via_power_of_two<int>);
 }
 
 static void BM_04_power_via_exponent_binary_partition(benchmark::State& state)
@@ -99,6 +99,12 @@ static void BM_04_fibonacci_golden_ratio(benchmark::State& state)
     fibonacci(state, fibonacci_golden_ratio);
 }
 
+static void BM_04_fibonacci_matrix(benchmark::State& state)
+{
+    fibonacci(state, fibonacci_matrix);
+}
+
 BENCHMARK(BM_04_fibonacci_recursive)->Arg(1)->Arg(5)->Arg(10)->Arg(20)->Arg(30)->Complexity(benchmark::oN);
 BENCHMARK(BM_04_fibonacci_iterative)->Arg(1)->Arg(5)->Arg(10)->Arg(20)->Arg(30)->Arg(50)->Arg(100)->Complexity(benchmark::oN);
 BENCHMARK(BM_04_fibonacci_golden_ratio)->Arg(1)->Arg(5)->Arg(10)->Arg(20)->Arg(30)->Arg(50)->Arg(100)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_fibonacci_matrix)->Arg(1)->Arg(5)->Arg(10)->Arg(20)->Arg(30)->Arg(50)->Arg(100)->Complexity(benchmark::oN);

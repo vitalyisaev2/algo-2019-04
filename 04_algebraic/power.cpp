@@ -9,19 +9,6 @@ int power_iterative(int base, unsigned int exponent)
     return result;
 }
 
-int power_via_power_of_two(int base, unsigned int exponent)
-{
-    if (exponent == 0) {
-        return 1;
-    }
-    if (exponent % 2 == 1) {
-        return power_via_power_of_two(base, exponent - 1) * base;
-    }
-    int result = power_via_power_of_two(base, exponent / 2);
-    return result * result;
-}
-
-
 int power_via_exponent_binary_partition(int base, unsigned int exponent)
 {
     // определяем первый значащий бит
