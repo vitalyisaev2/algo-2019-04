@@ -1,5 +1,6 @@
 #include "algebraic.hpp"
 #include <catch2/catch.hpp>
+#include <cmath>
 #include <tuple>
 
 TEST_CASE("GCD")
@@ -64,18 +65,19 @@ TEST_CASE("Prime numbers")
         {
             std::vector<std::tuple<uint, std::vector<uint>>> cases = {
                 {0, {}},
-                {1, {1}},
-                {2, {1, 2}},
-                {3, {1, 2, 3}},
-                {4, {1, 2, 3}},
-                {5, {1, 2, 3, 5}},
-                {6, {1, 2, 3, 5}},
-                {7, {1, 2, 3, 5, 7}},
-                {8, {1, 2, 3, 5, 7}},
-                {9, {1, 2, 3, 5, 7}},
-                {10, {1, 2, 3, 5, 7}},
-                {11, {1, 2, 3, 5, 7, 11}},
-                {30, {1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29}},
+                {1, {}},
+                {2, {2}},
+                {3, {2, 3}},
+                {4, {2, 3}},
+                {5, {2, 3, 5}},
+                {6, {2, 3, 5}},
+                {7, {2, 3, 5, 7}},
+                {8, {2, 3, 5, 7}},
+                {9, {2, 3, 5, 7}},
+                {10, {2, 3, 5, 7}},
+                {11, {2, 3, 5, 7, 11}},
+                {30, {2, 3, 5, 7, 11, 13, 17, 19, 23, 29}},
+                {100, {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97}},
             };
 
             for (const auto& c : cases) {
@@ -89,6 +91,6 @@ TEST_CASE("Prime numbers")
     };
 
     section(prime_numbers_bruteforce<uint>, "bruteforce");
-    section(prime_numbers_bruteforce<uint>, "bruteforce_optimized");
-    section(prime_numbers_eratosthenes_sieve<uint>, "eratosthenes_sieve");
+    section(prime_numbers_bruteforce_optimized<uint>, "bruteforce_optimized");
+    // section(prime_numbers_eratosthenes_sieve<uint>, "eratosthenes_sieve");
 }

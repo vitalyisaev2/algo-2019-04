@@ -173,6 +173,7 @@ BENCHMARK(BM_04_prime_numbers_bruteforce)
     ->Arg(500)
     ->Arg(1000)
     ->Arg(5000)
+    ->Arg(10000)
     ->Complexity(benchmark::oN);
 
 BENCHMARK(BM_04_prime_numbers_bruteforce_optimized)
@@ -186,6 +187,9 @@ BENCHMARK(BM_04_prime_numbers_bruteforce_optimized)
     ->Arg(500)
     ->Arg(1000)
     ->Arg(5000)
+    ->Arg(10000)
+    ->Arg(50000)
+    ->Arg(100000)
     ->Complexity(benchmark::oN);
 
 BENCHMARK(BM_04_prime_numbers_eratosthenes_sieve)
@@ -199,4 +203,7 @@ BENCHMARK(BM_04_prime_numbers_eratosthenes_sieve)
     ->Arg(500)
     ->Arg(1000)
     ->Arg(5000)
+    ->Arg(10000)
+    ->Arg(50000)
+    ->Arg(100000)
     ->Complexity(benchmark::oN);

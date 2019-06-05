@@ -245,16 +245,11 @@ T fibonacci_matrix(N n)
 template <typename T, typename = std::enable_if_t<std::is_unsigned_v<T>>>
 using prime_numbers_func = std::function<void(T, std::vector<T>&)>;
 
+// prime_numbers_bruteforce - простой перебор всех простых чисел без оптимизаций
 template <typename T, typename = std::enable_if_t<std::is_unsigned_v<T>>>
 void prime_numbers_bruteforce(T n, std::vector<T>& result)
 {
-    if (n == 0) {
-        return;
-    }
-
-    result.push_back(1);
-
-    if (n == 1) {
+    if (n <= 1) {
         return;
     }
 
@@ -272,22 +267,21 @@ void prime_numbers_bruteforce(T n, std::vector<T>& result)
     }
 }
 
+// prime_numbers_bruteforce_optimized - простой перебор всех простых чисел с некоторыми оптимизациями
 template <typename T, typename = std::enable_if_t<std::is_unsigned_v<T>>>
 void prime_numbers_bruteforce_optimized(T n, std::vector<T>& result)
 {
-    if (n == 0) {
+    if (n <= 1) {
+        return;
+    }
+    result.push_back(2);
+    if (n == 2) {
         return;
     }
 
-    result.push_back(1);
-
-    if (n == 1) {
-        return;
-    }
-
-    for (T i = 2; i <= static_cast<T>(sqrt(n)); i++) {
+    for (T i = 3; i <= n; i += 2) {
         bool is_prime = true;
-        for (T j = 2; j < i - 1; j++) {
+        for (T j = 3; j <= static_cast<T>(sqrt(i)); j++) {
             if (i % j == 0) {
                 is_prime = false;
                 break;
@@ -299,20 +293,28 @@ void prime_numbers_bruteforce_optimized(T n, std::vector<T>& result)
     }
 }
 
+// prime_numbers_eratosthenes_sieve - поиск простых чисел с помощью решета Эратосфена
 template <typename T, typename = std::enable_if_t<std::is_unsigned_v<T>>>
 void prime_numbers_eratosthenes_sieve(T n, std::vector<T>& result)
 {
+    if (n <= 3) {
+        prime_numbers_bruteforce_optimized(n, result);
+        return;
+    }
+
     auto flags = std::vector<bool>();
-    flags.reserve(static_cast<std::size_t>(n+1));
     for (size_t i = 0; i <= n; i++) {
         flags.push_back(true);
     }
 
-    for (T i = 2; power_via_exponent_binary_partition_with_gcc_extentions<T>(i, 2) <= n; i++) {
+    for (T i = 3; power_via_exponent_binary_partition_with_gcc_extentions<T>(i, 2) <= n; i += 2) {
         if (flags[i]) {
             for (T j = power_via_exponent_binary_partition_with_gcc_extentions<T>(i, 2); j <= n; j += i) {
                 flags[j] = false;
             }
+        }
+        if (i < n) {
+            flags[i + 1] = false;
         }
     }
 
