@@ -17,7 +17,7 @@ MACRO(SUBDIRLIST result curdir)
 ENDMACRO()
 
 # глобальные настройки компилятора 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo -Wstrict-null-sentinel -Wstrict-overflow=2 -Wswitch-default -Wundef -Werror -Wno-unused") 
 
 # зависимости
@@ -25,9 +25,10 @@ find_package(Catch2 2.7 REQUIRED)
 find_package(benchmark REQUIRED)
 
 # сборка бинарника с тестами
-file(GLOB tests_main_src "*.cpp")
+file(GLOB tests_main_src "*test.cpp")
 file(GLOB_RECURSE tests_full_src 
   ${PROJECT_SOURCE_DIR}/02_data_structures/*.cpp
+  ${PROJECT_SOURCE_DIR}/04_algebraic/*.cpp
 )
 list(APPEND tests_full_src ${tests_main_src})
 list(FILTER tests_full_src EXCLUDE REGEX ".*bench.cpp$")
@@ -37,10 +38,16 @@ target_include_directories(tests PRIVATE "${tests_include}")
 target_link_libraries(tests Catch2::Catch2)
 
 # сборка бинарника с бенчмарками
-file(GLOB_RECURSE benchmarks_src "*bench.cpp")
-SUBDIRLIST(benchmarks_include "${PROJECT_SOURCE_DIR}")
-add_executable(benchmarks "${benchmarks_src}")
-target_include_directories(benchmarks PRIVATE "${benchmarks_include}")
+file(GLOB_RECURSE bench_main_src "*bench.cpp")
+file(GLOB_RECURSE bench_full_src 
+  ${PROJECT_SOURCE_DIR}/02_data_structures/*.cpp
+  ${PROJECT_SOURCE_DIR}/04_algebraic/*.cpp
+)
+list(APPEND bench_full_src ${bench_main_src})
+list(FILTER bench_full_src EXCLUDE REGEX ".*test.cpp$")
+SUBDIRLIST(bench_include "${PROJECT_SOURCE_DIR}")
+add_executable(benchmarks "${bench_full_src}")
+target_include_directories(benchmarks PRIVATE "${bench_include}")
 target_link_libraries(benchmarks benchmark::benchmark)
 
 # запуск тестов
