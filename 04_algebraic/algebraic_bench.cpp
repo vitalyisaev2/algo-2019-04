@@ -135,9 +135,9 @@ BENCHMARK(BM_04_fibonacci_matrix)
 
 // prime numbers
 
-static void prime_numbers(benchmark::State& state, prime_numbers_func<int> f)
+static void prime_numbers(benchmark::State& state, prime_numbers_func<uint> f)
 {
-    std::vector<int> rcv;
+    std::vector<uint> rcv;
     for (auto _ : state) {
         state.PauseTiming();
         rcv.clear();
@@ -149,10 +149,46 @@ static void prime_numbers(benchmark::State& state, prime_numbers_func<int> f)
 
 static void BM_04_prime_numbers_bruteforce(benchmark::State& state)
 {
-    prime_numbers(state, prime_numbers_bruteforce<int>);
+    prime_numbers(state, prime_numbers_bruteforce<uint>);
+}
+
+static void BM_04_prime_numbers_bruteforce_optimized(benchmark::State& state)
+{
+    prime_numbers(state, prime_numbers_bruteforce_optimized<uint>);
+}
+
+static void BM_04_prime_numbers_eratosthenes_sieve(benchmark::State& state)
+{
+    prime_numbers(state, prime_numbers_eratosthenes_sieve<uint>);
 }
 
 BENCHMARK(BM_04_prime_numbers_bruteforce)
+    ->Arg(1)
+    ->Arg(5)
+    ->Arg(10)
+    ->Arg(20)
+    ->Arg(30)
+    ->Arg(50)
+    ->Arg(100)
+    ->Arg(500)
+    ->Arg(1000)
+    ->Arg(5000)
+    ->Complexity(benchmark::oN);
+
+BENCHMARK(BM_04_prime_numbers_bruteforce_optimized)
+    ->Arg(1)
+    ->Arg(5)
+    ->Arg(10)
+    ->Arg(20)
+    ->Arg(30)
+    ->Arg(50)
+    ->Arg(100)
+    ->Arg(500)
+    ->Arg(1000)
+    ->Arg(5000)
+    ->Complexity(benchmark::oN);
+
+BENCHMARK(BM_04_prime_numbers_eratosthenes_sieve)
     ->Arg(1)
     ->Arg(5)
     ->Arg(10)

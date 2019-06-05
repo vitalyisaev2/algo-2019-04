@@ -20,16 +20,17 @@ TEST_CASE("Exponentiation")
     auto section = [](power_func<int> f, const char* name) {
         SECTION(name)
         {
+            REQUIRE(f(2, 2) == 4);
             REQUIRE(f(2, 10) == 1024);
+            REQUIRE(f(3, 3) == 27);
+            REQUIRE(f(4, 1) == 4);
         }
     };
 
     section(power_iterative<int>, "iterative");
     section(power_via_power_of_two<int>, "via power of two");
     section(power_via_exponent_binary_partition<int>, "via exponent binary partition");
-#ifdef _GNUC_
     section(power_via_exponent_binary_partition_with_gcc_extentions<int>, "via exponent binary partition with GCC extentions");
-#endif
 }
 
 TEST_CASE("Fibonacci")
@@ -58,29 +59,36 @@ TEST_CASE("Fibonacci")
 
 TEST_CASE("Prime numbers")
 {
-    auto section = [](prime_numbers_func<int> f, const char* name) {
+    auto section = [](prime_numbers_func<uint> f, const char* name) {
         SECTION(name)
         {
-            std::vector<std::tuple<int, std::vector<int>>> cases = {
+            std::vector<std::tuple<uint, std::vector<uint>>> cases = {
                 {0, {}},
                 {1, {1}},
                 {2, {1, 2}},
                 {3, {1, 2, 3}},
                 {4, {1, 2, 3}},
                 {5, {1, 2, 3, 5}},
+                {6, {1, 2, 3, 5}},
+                {7, {1, 2, 3, 5, 7}},
+                {8, {1, 2, 3, 5, 7}},
+                {9, {1, 2, 3, 5, 7}},
+                {10, {1, 2, 3, 5, 7}},
+                {11, {1, 2, 3, 5, 7, 11}},
+                {30, {1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29}},
             };
 
             for (const auto& c : cases) {
-                auto             n = std::get<0>(c);
-                std::vector<int> actual;
-                std::vector<int> expected = std::get<1>(c);
-                // std::cout << "N: " << n << std::endl;
+                auto              n = std::get<0>(c);
+                std::vector<uint> actual;
+                std::vector<uint> expected = std::get<1>(c);
                 f(n, actual);
                 REQUIRE(actual == expected);
             }
-
         }
     };
 
-    section(prime_numbers_bruteforce<int>, "bruteforce");
+    section(prime_numbers_bruteforce<uint>, "bruteforce");
+    section(prime_numbers_bruteforce<uint>, "bruteforce_optimized");
+    section(prime_numbers_eratosthenes_sieve<uint>, "eratosthenes_sieve");
 }

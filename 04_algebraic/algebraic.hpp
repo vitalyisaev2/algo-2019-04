@@ -2,6 +2,7 @@
 #define ALGEBRAIC_HPP
 
 #include <functional>
+#include <iostream>
 #include <math.h>
 #include <type_traits>
 #include <vector>
@@ -87,19 +88,19 @@ template <typename T>
 T power_via_exponent_binary_partition(T base, unsigned int exponent)
 {
     // определяем первый значащий бит
-    int           first_signed_bit_position = 0;
-    constexpr int bits                      = sizeof(int) * 8;
-    for (int pos = bits; pos >= 0; pos--) {
-        if (static_cast<T>(exponent) & (1 << pos)) {
+    size_t           first_signed_bit_position = 0;
+    constexpr size_t bits                      = sizeof(int) * 8 - 1;
+    for (size_t pos = bits; pos >= 0; pos--) {
+        if (exponent & size_t(1 << pos)) {
             first_signed_bit_position = pos;
             break;
         }
     }
 
     // начиная с первого значащего бита собираем результат
-    int result = 1;
+    T result = 1;
     for (int pos = first_signed_bit_position; pos >= 0; pos--) {
-        if (static_cast<T>(exponent) & (1 << pos)) {
+        if (exponent & size_t(1 << pos)) {
             result *= result;
             result *= base;
         } else {
@@ -118,12 +119,12 @@ template <typename T>
 T power_via_exponent_binary_partition_with_gcc_extentions(T base, unsigned int exponent)
 {
     // определяем первый значащий бит
-    int first_signed_bit_position = static_cast<T>(sizeof(T) * 8) - __builtin_clz(exponent);
+    size_t first_signed_bit_position = static_cast<size_t>(sizeof(T) * 8) - static_cast<size_t>(__builtin_clz(exponent));
 
     // начиная с первого значащего бита собираем результат
-    int result = 1;
+    T result = 1;
     for (int pos = first_signed_bit_position; pos >= 0; pos--) {
-        if (static_cast<T>(exponent) & (1 << pos)) {
+        if (exponent & (size_t(1) << pos)) {
             result *= result;
             result *= base;
         } else {
@@ -241,10 +242,10 @@ T fibonacci_matrix(N n)
 
 // --------- Prime numbers ------------
 
-template <typename T>
+template <typename T, typename = std::enable_if_t<std::is_unsigned_v<T>>>
 using prime_numbers_func = std::function<void(T, std::vector<T>&)>;
 
-template <typename T>
+template <typename T, typename = std::enable_if_t<std::is_unsigned_v<T>>>
 void prime_numbers_bruteforce(T n, std::vector<T>& result)
 {
     if (n == 0) {
@@ -257,15 +258,66 @@ void prime_numbers_bruteforce(T n, std::vector<T>& result)
         return;
     }
 
-    for (int i = 2; i <= n; i++) {
+    for (T i = 2; i <= n; i++) {
         bool is_prime = true;
-        for (int j = 2; j < i - 1; j++) {
+        for (T j = 2; j < i - 1; j++) {
             if (i % j == 0) {
                 is_prime = false;
                 break;
             }
         }
         if (is_prime) {
+            result.push_back(i);
+        }
+    }
+}
+
+template <typename T, typename = std::enable_if_t<std::is_unsigned_v<T>>>
+void prime_numbers_bruteforce_optimized(T n, std::vector<T>& result)
+{
+    if (n == 0) {
+        return;
+    }
+
+    result.push_back(1);
+
+    if (n == 1) {
+        return;
+    }
+
+    for (T i = 2; i <= static_cast<T>(sqrt(n)); i++) {
+        bool is_prime = true;
+        for (T j = 2; j < i - 1; j++) {
+            if (i % j == 0) {
+                is_prime = false;
+                break;
+            }
+        }
+        if (is_prime) {
+            result.push_back(i);
+        }
+    }
+}
+
+template <typename T, typename = std::enable_if_t<std::is_unsigned_v<T>>>
+void prime_numbers_eratosthenes_sieve(T n, std::vector<T>& result)
+{
+    auto flags = std::vector<bool>();
+    flags.reserve(static_cast<std::size_t>(n+1));
+    for (size_t i = 0; i <= n; i++) {
+        flags.push_back(true);
+    }
+
+    for (T i = 2; power_via_exponent_binary_partition_with_gcc_extentions<T>(i, 2) <= n; i++) {
+        if (flags[i]) {
+            for (T j = power_via_exponent_binary_partition_with_gcc_extentions<T>(i, 2); j <= n; j += i) {
+                flags[j] = false;
+            }
+        }
+    }
+
+    for (T i = 1; i <= n; i++) {
+        if (flags[i]) {
             result.push_back(i);
         }
     }
