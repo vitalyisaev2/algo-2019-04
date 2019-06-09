@@ -60,6 +60,11 @@ static void BM_04_power_via_exponent_binary_partition_with_gcc_extentions(benchm
     power(state, power_via_exponent_binary_partition_with_gcc_extentions<int>);
 }
 
+static void BM_04_power_via_exponent_binary_partition_fast(benchmark::State& state)
+{
+    power(state, power_via_exponent_binary_partition_fast<int>);
+}
+
 BENCHMARK(BM_04_power_iterative)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
 BENCHMARK(BM_04_power_via_power_of_two)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
 BENCHMARK(BM_04_power_via_exponent_binary_partition)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
@@ -67,6 +72,7 @@ BENCHMARK(BM_04_power_via_exponent_binary_partition_with_gcc_extentions)
     ->RangeMultiplier(2)
     ->Range(1 << 4, 1 << 20)
     ->Complexity(benchmark::oN);
+BENCHMARK(BM_04_power_via_exponent_binary_partition_fast)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
 
 // fibonacci
 
