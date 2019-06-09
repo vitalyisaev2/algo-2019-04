@@ -29,6 +29,7 @@ file(GLOB tests_main_src "*test.cpp")
 file(GLOB_RECURSE tests_full_src 
   ${PROJECT_SOURCE_DIR}/02_data_structures/*.cpp
   ${PROJECT_SOURCE_DIR}/04_algebraic/*.cpp
+  ${PROJECT_SOURCE_DIR}/05_sort/*.cpp
 )
 list(APPEND tests_full_src ${tests_main_src})
 list(FILTER tests_full_src EXCLUDE REGEX ".*bench.cpp$")
@@ -42,6 +43,7 @@ file(GLOB_RECURSE bench_main_src "*bench.cpp")
 file(GLOB_RECURSE bench_full_src 
   ${PROJECT_SOURCE_DIR}/02_data_structures/*.cpp
   ${PROJECT_SOURCE_DIR}/04_algebraic/*.cpp
+  ${PROJECT_SOURCE_DIR}/05_sort/*.cpp
 )
 list(APPEND bench_full_src ${bench_main_src})
 list(FILTER bench_full_src EXCLUDE REGEX ".*test.cpp$")
