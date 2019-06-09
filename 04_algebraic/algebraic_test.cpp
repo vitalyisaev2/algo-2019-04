@@ -32,6 +32,7 @@ TEST_CASE("Exponentiation")
     section(power_via_power_of_two<int>, "via power of two");
     section(power_via_exponent_binary_partition<int>, "via exponent binary partition");
     section(power_via_exponent_binary_partition_with_gcc_extentions<int>, "via exponent binary partition with GCC extentions");
+    section(power_via_exponent_binary_partition_fast<int>, "via exponent binary partition fast");
 }
 
 TEST_CASE("Fibonacci")
@@ -92,5 +93,5 @@ TEST_CASE("Prime numbers")
 
     section(prime_numbers_bruteforce<uint>, "bruteforce");
     section(prime_numbers_bruteforce_optimized<uint>, "bruteforce_optimized");
-    // section(prime_numbers_eratosthenes_sieve<uint>, "eratosthenes_sieve");
+    section(prime_numbers_eratosthenes_sieve<uint>, "eratosthenes_sieve");
 }

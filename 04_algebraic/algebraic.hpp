@@ -69,7 +69,7 @@ T power_iterative(T base, unsigned int exponent)
     return result;
 }
 
-// power_via_power_of_2 - возведение в степень через степень двойки с умножением
+// power_via_power_of_two - возведение в степень через степень двойки с умножением
 template <typename T>
 T power_via_power_of_two(T base, unsigned int exponent)
 {
@@ -135,6 +135,24 @@ T power_via_exponent_binary_partition_with_gcc_extentions(T base, unsigned int e
     return result;
 }
 #endif
+
+// power_via_exponent_binary_partition_fast
+template <typename T>
+T power_via_exponent_binary_partition_fast(T base, unsigned int exponent)
+{
+    T result = 1;
+    while (exponent > 1) {
+        if (exponent % 2 == 1) {
+            result *= base;
+        }
+        base *= base;
+        exponent /= 2;
+    }
+    if (exponent > 0) {
+        result *= base;
+    }
+    return result;
+}
 
 // --------- Fibonacci numbers ------------
 
@@ -297,7 +315,7 @@ void prime_numbers_bruteforce_optimized(T n, std::vector<T>& result)
 template <typename T, typename = std::enable_if_t<std::is_unsigned_v<T>>>
 void prime_numbers_eratosthenes_sieve(T n, std::vector<T>& result)
 {
-    if (n <= 3) {
+    if (n <= 2) {
         prime_numbers_bruteforce_optimized(n, result);
         return;
     }
@@ -307,18 +325,15 @@ void prime_numbers_eratosthenes_sieve(T n, std::vector<T>& result)
         flags.push_back(true);
     }
 
-    for (T i = 3; power_via_exponent_binary_partition_with_gcc_extentions<T>(i, 2) <= n; i += 2) {
+    for (T i = 2; power_via_exponent_binary_partition_with_gcc_extentions<T>(i, 2) <= n; i += 1) {
         if (flags[i]) {
             for (T j = power_via_exponent_binary_partition_with_gcc_extentions<T>(i, 2); j <= n; j += i) {
                 flags[j] = false;
             }
         }
-        if (i < n) {
-            flags[i + 1] = false;
-        }
     }
 
-    for (T i = 1; i <= n; i++) {
+    for (T i = 2; i <= n; i++) {
         if (flags[i]) {
             result.push_back(i);
         }
