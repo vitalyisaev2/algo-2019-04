@@ -1,6 +1,5 @@
 #include "algebraic.hpp"
 #include <benchmark/benchmark.h>
-#include <functional>
 
 // greatest common divisor
 

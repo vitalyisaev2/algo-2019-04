@@ -1,11 +1,7 @@
 #ifndef INSERTION_SORT_HPP
 #define INSERTION_SORT_HPP
 
-#include <functional>
-#include <vector>
-
-template <typename T>
-using sort_func = std::function<void(std::vector<T>&)>;
+#include "common.hpp"
 
 template <typename T>
 void insertion_sort(std::vector<T>& data)
@@ -13,14 +9,12 @@ void insertion_sort(std::vector<T>& data)
     if (data.size() <= 1) {
         return;
     }
-    for (size_t j = 1; j < data.size(); j++) {
-        auto key = data[j];
-        auto i   = j - 1;
-        while (i >= 0 && data[i] > key) {
-            data[i + 1] = data[i];
-            i--;
+    for (size_t i = 1; i < data.size(); i++) {
+        auto j = i;
+        while (j > 0 && data[j - 1] > data[j]) {
+            std::swap(data[j], data[j - 1]);
+            j--;
         }
-        data[i + 1] = key;
     }
     return;
 }

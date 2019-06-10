@@ -1,5 +1,8 @@
 #include "insertion.hpp"
+#include "sequence_generator.hpp"
 #include <catch2/catch.hpp>
+
+SequenceGenerator<int> generator;
 
 TEST_CASE("sort")
 {
@@ -9,8 +12,8 @@ TEST_CASE("sort")
             SECTION("sorted sequence")
             {
                 {
-                    std::vector<int> input    = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-                    std::vector<int> expected = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+                    auto             input = generator.GetSequence(10, SequenceGenerator<int>::Sorted);
+                    std::vector<int> expected(input);
                     f(input);
                     REQUIRE(input == expected);
                 }
@@ -18,8 +21,9 @@ TEST_CASE("sort")
             SECTION("reverse sorted sequence")
             {
                 {
-                    std::vector<int> input    = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
-                    std::vector<int> expected = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+                    std::vector<int> input(generator.GetSequence(10, SequenceGenerator<int>::ReverseSorted));
+                    std::vector<int> expected(input.size());
+                    std::reverse_copy(input.begin(), input.end(), expected.begin());
                     f(input);
                     REQUIRE(input == expected);
                 }
