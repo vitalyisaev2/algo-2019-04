@@ -1,15 +1,18 @@
+#!/usr/bin/python3
+
 import pandas
 import json
 import matplotlib.pyplot as plt
 
-fname = "/tmp/result"
+fname = "./build/result.json"
 
 pandas.set_option('display.max_rows', 500)
 pandas.set_option('display.max_columns', 500)
 pandas.set_option('display.width', 1000)
 
+
 def extractMethodName(name):
-    return name.split("_")[2]
+    return name.split("_")[2].split("<")[0]
 
 
 def extractType(name):
@@ -18,9 +21,8 @@ def extractType(name):
     splitted = name.split("/")
     if len(splitted) == 3:
         type_parameter = splitted[2]
-    else:
-        type_parameter = ""
-    return "{0}({1})".format(type_name, type_parameter)
+        return "{0}({1})".format(type_name, type_parameter)
+    return type_name
 
 
 def extractN(name):
