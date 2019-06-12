@@ -4,7 +4,10 @@
 #include <functional>
 #include <vector>
 
-template <typename T>
-using sort_func = std::function<void(std::vector<T>&)>;
+namespace algo
+{
+    template <typename T>
+    using SortFunc = std::function<void(std::vector<T>&)>;
+}
 
 #endif
