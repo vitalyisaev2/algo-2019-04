@@ -17,7 +17,7 @@ MACRO(SUBDIRLIST result curdir)
 ENDMACRO()
 
 # глобальные настройки компилятора 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wnoexcept -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo -Wstrict-null-sentinel -Wstrict-overflow=2 -Wswitch-default -Wundef -Werror -Wno-unused") 
 
 # зависимости
@@ -29,6 +29,7 @@ file(GLOB tests_main_src "*test.cpp")
 file(GLOB_RECURSE tests_full_src 
   ${PROJECT_SOURCE_DIR}/02_data_structures/*.cpp
   ${PROJECT_SOURCE_DIR}/04_algebraic/*.cpp
+  ${PROJECT_SOURCE_DIR}/05_sort/*.cpp
 )
 list(APPEND tests_full_src ${tests_main_src})
 list(FILTER tests_full_src EXCLUDE REGEX ".*bench.cpp$")
@@ -42,6 +43,7 @@ file(GLOB_RECURSE bench_main_src "*bench.cpp")
 file(GLOB_RECURSE bench_full_src 
   ${PROJECT_SOURCE_DIR}/02_data_structures/*.cpp
   ${PROJECT_SOURCE_DIR}/04_algebraic/*.cpp
+  ${PROJECT_SOURCE_DIR}/05_sort/*.cpp
 )
 list(APPEND bench_full_src ${bench_main_src})
 list(FILTER bench_full_src EXCLUDE REGEX ".*test.cpp$")

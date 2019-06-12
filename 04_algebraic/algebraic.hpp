@@ -2,7 +2,6 @@
 #define ALGEBRAIC_HPP
 
 #include <functional>
-#include <iostream>
 #include <math.h>
 #include <type_traits>
 #include <vector>
