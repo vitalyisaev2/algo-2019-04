@@ -2,6 +2,7 @@
 #define SHELL_SORT_HPP
 
 #include "algebraic.hpp"
+#include <iostream>
 
 // Сортировка Шелла
 template <typename Gen, typename T>
@@ -26,26 +27,32 @@ class ShellSortFactory
 {
   public:
     enum Sequence {
-        Default = 0,
+        Shell     = 0,
+        Sedgewick = 1,
+        Ciura     = 2,
     };
 
     template <typename T>
     sort_func<T> Get(Sequence seq)
     {
         switch (seq) {
-        case Default:
-            return shell_sort<DefaultSequence, T>;
+        case Shell:
+            return shell_sort<ShellSequence, T>;
+        case Sedgewick:
+            return shell_sort<SedgewickSequence, T>;
+        case Ciura:
+            return shell_sort<CiuraSequence, T>;
         default:
             throw "illegal sequence";
         }
     }
 
   private:
-    // Оригинальная последовательность промежутков, предложенная Шеллом (O(N^2) в худшем случае)
-    class DefaultSequence
+    // Оригинальная последовательность промежутков, предложенная Шеллом в 1959 (O(N^2) в худшем случае)
+    class ShellSequence
     {
       public:
-        DefaultSequence(size_t _n) : n(_n), k(1){};
+        ShellSequence(size_t _n) : n(_n), k(1){};
 
         bool valid() const
         {
@@ -61,7 +68,78 @@ class ShellSortFactory
         size_t n;
         size_t k;
     };
-};
 
+    // Последовательность Седжвика, предложенная в 1971 г. (O(N^4/3) в худшем случае)
+    class SedgewickSequence
+    {
+      public:
+        SedgewickSequence(size_t n)
+        {
+            for (size_t k = 1, gap = 1; gap < n / 2; k++) {
+                gaps.push_back(gap);
+                // 4^k + 3*2^(k-1) + 1
+                gap = power_via_exponent_binary_partition_fast<size_t>(4, k) +
+                      3 * power_via_exponent_binary_partition_fast<size_t>(2, k - 1) + 1;
+            }
+            it = gaps.rbegin();
+        }
+
+        bool valid() const
+        {
+            return it != gaps.rend();
+        }
+
+        size_t next()
+        {
+            return *(it++);
+        }
+
+      private:
+        std::vector<size_t>                         gaps;
+        std::vector<size_t>::const_reverse_iterator it;
+    };
+
+    // Эмпирическая последовательность Ciura (2001), считается лучшей, асимптотика не установлена
+    class CiuraSequence
+    {
+      public:
+        CiuraSequence(size_t n) : gaps({1, 4, 10, 23, 57, 132, 301, 701})
+        {
+            // числа последовательности выще k=8 не определены, но, согласно Википедии,
+            // их можно доопределить с помощью рекурентного соотношения
+            if (n > 2 * gaps.back()) {
+                while (true) {
+                    size_t gap = static_cast<size_t>(float(gap) * 2.25);
+                    if (n < 2 * gap) {
+                        break;
+                    }
+                    gaps.push_back(gap);
+                }
+                it = gaps.rbegin();
+            } else {
+                // определяем следующий подходящий интервал
+                it = gaps.rbegin();
+                for (size_t i = gaps.size() - 1; i > 0; i--) {
+                    if (gaps[i] < n / 2) {
+                        std::advance(it, i);
+                        return;
+                    }
+                }
+            }
+        };
+        bool valid() const
+        {
+            return it != gaps.rend();
+        }
+        size_t next()
+        {
+            return *(it++);
+        }
+
+      private:
+        std::vector<size_t>                         gaps;
+        std::vector<size_t>::const_reverse_iterator it;
+    };
+};
 
 #endif
