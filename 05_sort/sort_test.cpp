@@ -6,10 +6,10 @@
 TEST_CASE("sort")
 {
 
-    SequenceGenerator<int> sequenceGenerator;
-    ShellSortFactory       shellSortFactory;
+    utils::SequenceGenerator<int> sequenceGenerator;
+    algo::ShellSortFactory        shellSortFactory;
 
-    auto section = [&](sort_func<int> f, const char* name) {
+    auto section = [&](algo::SortFunc<int> f, const char* name) {
         SECTION(name)
         {
             SECTION("empty array")
@@ -28,14 +28,14 @@ TEST_CASE("sort")
             }
             SECTION("sorted sequence")
             {
-                auto             input = sequenceGenerator.GetSequence(32, SequenceGenerator<int>::Sorted);
+                auto             input = sequenceGenerator.GetSequence(32, utils::SequenceGenerator<int>::Sorted);
                 std::vector<int> expected(input);
                 f(input);
                 REQUIRE(input == expected);
             }
             SECTION("reverse sorted sequence")
             {
-                std::vector<int> input(sequenceGenerator.GetSequence(32, SequenceGenerator<int>::ReverseSorted));
+                std::vector<int> input(sequenceGenerator.GetSequence(32, utils::SequenceGenerator<int>::ReverseSorted));
                 std::vector<int> expected(input.size());
                 std::reverse_copy(input.begin(), input.end(), expected.begin());
                 f(input);
@@ -44,7 +44,7 @@ TEST_CASE("sort")
 
             SECTION("shuffled sequence")
             {
-                std::vector<int> input(sequenceGenerator.GetSequence(32, SequenceGenerator<int>::Shuffled100Percent));
+                std::vector<int> input(sequenceGenerator.GetSequence(32, utils::SequenceGenerator<int>::Shuffled100Percent));
                 std::vector<int> expected(input.size());
                 std::copy(input.begin(), input.end(), expected.begin());
                 std::sort(expected.begin(), expected.end());
@@ -54,8 +54,8 @@ TEST_CASE("sort")
         }
     };
 
-    section(insertion_sort<int>, "insertion sort");
-    section(shellSortFactory.Get<int>(ShellSortFactory::Sequence::Shell), "shell sort (Shell sequence)");
-    section(shellSortFactory.Get<int>(ShellSortFactory::Sequence::Sedgewick), "shell sort (Sedgewick sequence)");
-    section(shellSortFactory.Get<int>(ShellSortFactory::Sequence::Ciura), "shell sort (Ciura sequence)");
+    section(algo::InsertionSort<int>, "insertion sort");
+    section(shellSortFactory.Get<int>(algo::ShellSortFactory::Sequence::Shell), "shell sort (Shell sequence)");
+    section(shellSortFactory.Get<int>(algo::ShellSortFactory::Sequence::Sedgewick), "shell sort (Sedgewick sequence)");
+    section(shellSortFactory.Get<int>(algo::ShellSortFactory::Sequence::Ciura), "shell sort (Ciura sequence)");
 }

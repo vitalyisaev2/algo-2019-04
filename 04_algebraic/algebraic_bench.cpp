@@ -5,7 +5,7 @@
 
 const int gcd_divisor = 8;
 
-static void gcd(benchmark::State& state, gcd_func<int> f)
+static void gcd(benchmark::State& state, algo::GCDFunc<int> f)
 {
     for (auto _ : state) {
         benchmark::DoNotOptimize(f(state.range(0), gcd_divisor));
@@ -13,24 +13,24 @@ static void gcd(benchmark::State& state, gcd_func<int> f)
     state.SetComplexityN(state.range(0));
 }
 
-static void BM_04_gcd_sub(benchmark::State& state)
+static void BM_04_GCDSub(benchmark::State& state)
 {
-    gcd(state, gcd_sub<int>);
+    gcd(state, algo::GCDSub<int>);
 }
 
-static void BM_04_gcd_mod(benchmark::State& state)
+static void BM_04_GCDMod(benchmark::State& state)
 {
-    gcd(state, gcd_mod<int>);
+    gcd(state, algo::GCDMod<int>);
 }
 
-BENCHMARK(BM_04_gcd_sub)->RangeMultiplier(2)->Range(1 << 4, 1 << 18)->Complexity(benchmark::oN);
-BENCHMARK(BM_04_gcd_mod)->RangeMultiplier(2)->Range(1 << 4, 1 << 18)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_GCDSub)->RangeMultiplier(2)->Range(1 << 4, 1 << 18)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_GCDMod)->RangeMultiplier(2)->Range(1 << 4, 1 << 18)->Complexity(benchmark::oN);
 
 // power (exponentiation)
 
 const int power_base = 2;
 
-static void power(benchmark::State& state, power_func<int> f)
+static void power(benchmark::State& state, algo::PowerFunc<int> f)
 {
 
     for (auto _ : state) {
@@ -39,43 +39,40 @@ static void power(benchmark::State& state, power_func<int> f)
     state.SetComplexityN(state.range(0));
 }
 
-static void BM_04_power_iterative(benchmark::State& state)
+static void BM_04_PowerIterative(benchmark::State& state)
 {
-    power(state, power_iterative<int>);
+    power(state, algo::PowerIterative<int>);
 }
 
-static void BM_04_power_via_power_of_two(benchmark::State& state)
+static void BM_04_PowerViaPowerOfTwo(benchmark::State& state)
 {
-    power(state, power_via_power_of_two<int>);
+    power(state, algo::PowerViaPowerOfTwo<int>);
 }
 
-static void BM_04_power_via_exponent_binary_partition(benchmark::State& state)
+static void BM_04_PowerViaExponentBinaryPartition(benchmark::State& state)
 {
-    power(state, power_via_exponent_binary_partition<int>);
+    power(state, algo::PowerViaExponentBinaryPartition<int>);
 }
 
-static void BM_04_power_via_exponent_binary_partition_with_gcc_extentions(benchmark::State& state)
+static void BM_04_PowerViaExponentBinaryPartitionV2(benchmark::State& state)
 {
-    power(state, power_via_exponent_binary_partition_with_gcc_extentions<int>);
+    power(state, algo::PowerViaExponentBinaryPartitionV2<int>);
 }
 
-static void BM_04_power_via_exponent_binary_partition_fast(benchmark::State& state)
+static void BM_04_PowerViaExponentBinaryPartition_fast(benchmark::State& state)
 {
-    power(state, power_via_exponent_binary_partition_fast<int>);
+    power(state, algo::PowerViaExponentBinaryPartition_fast<int>);
 }
 
-BENCHMARK(BM_04_power_iterative)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
-BENCHMARK(BM_04_power_via_power_of_two)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
-BENCHMARK(BM_04_power_via_exponent_binary_partition)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
-BENCHMARK(BM_04_power_via_exponent_binary_partition_with_gcc_extentions)
-    ->RangeMultiplier(2)
-    ->Range(1 << 4, 1 << 20)
-    ->Complexity(benchmark::oN);
-BENCHMARK(BM_04_power_via_exponent_binary_partition_fast)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_PowerIterative)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_PowerViaPowerOfTwo)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_PowerViaExponentBinaryPartition)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_PowerViaExponentBinaryPartitionV2)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
+BENCHMARK(BM_04_PowerViaExponentBinaryPartition_fast)->RangeMultiplier(2)->Range(1 << 4, 1 << 20)->Complexity(benchmark::oN);
 
 // fibonacci
 
-static void fibonacci(benchmark::State& state, fibonacci_func<int, int> f)
+static void fibonacci(benchmark::State& state, algo::FibonacciFunc<int, int> f)
 {
     for (auto _ : state) {
         benchmark::DoNotOptimize(f(state.range(0)));
@@ -85,26 +82,26 @@ static void fibonacci(benchmark::State& state, fibonacci_func<int, int> f)
 
 static void BM_04_fibonacci_recursive(benchmark::State& state)
 {
-    fibonacci(state, fibonacci_recursive<int, int>);
+    fibonacci(state, algo::fibonacci_recursive<int, int>);
 }
 
-static void BM_04_fibonacci_iterative(benchmark::State& state)
+static void BM_04_FibonacciIterative(benchmark::State& state)
 {
-    fibonacci(state, fibonacci_iterative<int, int>);
+    fibonacci(state, algo::FibonacciIterative<int, int>);
 }
 
-static void BM_04_fibonacci_golden_ratio(benchmark::State& state)
+static void BM_04_FibonacciGoldenRatio(benchmark::State& state)
 {
-    fibonacci(state, fibonacci_golden_ratio<int, int>);
+    fibonacci(state, algo::FibonacciGoldenRatio<int, int>);
 }
 
-static void BM_04_fibonacci_matrix(benchmark::State& state)
+static void BM_04_FibonacciMatrix(benchmark::State& state)
 {
-    fibonacci(state, fibonacci_matrix<int, int>);
+    fibonacci(state, algo::FibonacciMatrix<int, int>);
 }
 
 BENCHMARK(BM_04_fibonacci_recursive)->Arg(1)->Arg(5)->Arg(10)->Arg(20)->Arg(30)->Complexity(benchmark::oN);
-BENCHMARK(BM_04_fibonacci_iterative)
+BENCHMARK(BM_04_FibonacciIterative)
     ->Arg(1)
     ->Arg(5)
     ->Arg(10)
@@ -115,7 +112,7 @@ BENCHMARK(BM_04_fibonacci_iterative)
     ->Arg(500)
     ->Arg(1000)
     ->Complexity(benchmark::oN);
-BENCHMARK(BM_04_fibonacci_golden_ratio)
+BENCHMARK(BM_04_FibonacciGoldenRatio)
     ->Arg(1)
     ->Arg(5)
     ->Arg(10)
@@ -126,7 +123,7 @@ BENCHMARK(BM_04_fibonacci_golden_ratio)
     ->Arg(500)
     ->Arg(1000)
     ->Complexity(benchmark::oN);
-BENCHMARK(BM_04_fibonacci_matrix)
+BENCHMARK(BM_04_FibonacciMatrix)
     ->Arg(1)
     ->Arg(5)
     ->Arg(10)
@@ -140,7 +137,7 @@ BENCHMARK(BM_04_fibonacci_matrix)
 
 // prime numbers
 
-static void prime_numbers(benchmark::State& state, prime_numbers_func<uint> f)
+static void prime_numbers(benchmark::State& state, algo::PrimeNumbersFunc<uint> f)
 {
     std::vector<uint> rcv;
     for (auto _ : state) {
@@ -152,22 +149,22 @@ static void prime_numbers(benchmark::State& state, prime_numbers_func<uint> f)
     state.SetComplexityN(state.range(0));
 }
 
-static void BM_04_prime_numbers_bruteforce(benchmark::State& state)
+static void BM_04_PrimeNumbersBruteforce(benchmark::State& state)
 {
-    prime_numbers(state, prime_numbers_bruteforce<uint>);
+    prime_numbers(state, algo::PrimeNumbersBruteforce<uint>);
 }
 
-static void BM_04_prime_numbers_bruteforce_optimized(benchmark::State& state)
+static void BM_04_PrimeNumbersBruteforce_optimized(benchmark::State& state)
 {
-    prime_numbers(state, prime_numbers_bruteforce_optimized<uint>);
+    prime_numbers(state, algo::PrimeNumbersBruteforceOptimized<uint>);
 }
 
-static void BM_04_prime_numbers_eratosthenes_sieve(benchmark::State& state)
+static void BM_04_PrimeNumbersEratosthenesSieve(benchmark::State& state)
 {
-    prime_numbers(state, prime_numbers_eratosthenes_sieve<uint>);
+    prime_numbers(state, algo::PrimeNumbersEratosthenesSieve<uint>);
 }
 
-BENCHMARK(BM_04_prime_numbers_bruteforce)
+BENCHMARK(BM_04_PrimeNumbersBruteforce)
     ->Arg(1)
     ->Arg(5)
     ->Arg(10)
@@ -181,7 +178,7 @@ BENCHMARK(BM_04_prime_numbers_bruteforce)
     ->Arg(10000)
     ->Complexity(benchmark::oN);
 
-BENCHMARK(BM_04_prime_numbers_bruteforce_optimized)
+BENCHMARK(BM_04_PrimeNumbersBruteforce_optimized)
     ->Arg(1)
     ->Arg(5)
     ->Arg(10)
@@ -197,7 +194,7 @@ BENCHMARK(BM_04_prime_numbers_bruteforce_optimized)
     ->Arg(100000)
     ->Complexity(benchmark::oN);
 
-BENCHMARK(BM_04_prime_numbers_eratosthenes_sieve)
+BENCHMARK(BM_04_PrimeNumbersEratosthenesSieve)
     ->Arg(1)
     ->Arg(5)
     ->Arg(10)

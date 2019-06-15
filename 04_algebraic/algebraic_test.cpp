@@ -7,18 +7,18 @@ TEST_CASE("GCD")
 {
     SECTION("sub")
     {
-        REQUIRE(gcd_sub(1071, 462) == 21);
+        REQUIRE(algo::GCDSub(1071, 462) == 21);
     }
 
     SECTION("mod")
     {
-        REQUIRE(gcd_mod(1071, 462) == 21);
+        REQUIRE(algo::GCDMod(1071, 462) == 21);
     }
 }
 
 TEST_CASE("Exponentiation")
 {
-    auto section = [](power_func<int> f, const char* name) {
+    auto section = [](algo::PowerFunc<int> f, const char* name) {
         SECTION(name)
         {
             REQUIRE(f(2, 2) == 4);
@@ -28,16 +28,16 @@ TEST_CASE("Exponentiation")
         }
     };
 
-    section(power_iterative<int>, "iterative");
-    section(power_via_power_of_two<int>, "via power of two");
-    section(power_via_exponent_binary_partition<int>, "via exponent binary partition");
-    section(power_via_exponent_binary_partition_with_gcc_extentions<int>, "via exponent binary partition with GCC extentions");
-    section(power_via_exponent_binary_partition_fast<int>, "via exponent binary partition fast");
+    section(algo::PowerIterative<int>, "iterative");
+    section(algo::PowerViaPowerOfTwo<int>, "via power of two");
+    section(algo::PowerViaExponentBinaryPartition<int>, "via exponent binary partition");
+    section(algo::PowerViaExponentBinaryPartitionV2<int>, "via exponent binary partition with GCC extentions");
+    section(algo::PowerViaExponentBinaryPartition_fast<int>, "via exponent binary partition fast");
 }
 
 TEST_CASE("Fibonacci")
 {
-    auto section = [](fibonacci_func<int, int> f, const char* name) {
+    auto section = [](algo::FibonacciFunc<int, int> f, const char* name) {
         SECTION(name)
         {
             REQUIRE(f(0) == 0);
@@ -53,15 +53,15 @@ TEST_CASE("Fibonacci")
         }
     };
 
-    section(fibonacci_recursive<int, int>, "recursive");
-    section(fibonacci_iterative<int, int>, "iterative");
-    section(fibonacci_golden_ratio<int, int>, "golden_ratio");
-    section(fibonacci_matrix<int, int>, "golden_ratio");
+    section(algo::fibonacci_recursive<int, int>, "recursive");
+    section(algo::FibonacciIterative<int, int>, "iterative");
+    section(algo::FibonacciGoldenRatio<int, int>, "golden_ratio");
+    section(algo::FibonacciMatrix<int, int>, "golden_ratio");
 }
 
 TEST_CASE("Prime numbers")
 {
-    auto section = [](prime_numbers_func<uint> f, const char* name) {
+    auto section = [](algo::PrimeNumbersFunc<uint> f, const char* name) {
         SECTION(name)
         {
             std::vector<std::tuple<uint, std::vector<uint>>> cases = {
@@ -91,7 +91,7 @@ TEST_CASE("Prime numbers")
         }
     };
 
-    section(prime_numbers_bruteforce<uint>, "bruteforce");
-    section(prime_numbers_bruteforce_optimized<uint>, "bruteforce_optimized");
-    section(prime_numbers_eratosthenes_sieve<uint>, "eratosthenes_sieve");
+    section(algo::PrimeNumbersBruteforce<uint>, "bruteforce");
+    section(algo::PrimeNumbersBruteforceOptimized<uint>, "bruteforce_optimized");
+    section(algo::PrimeNumbersEratosthenesSieve<uint>, "eratosthenes_sieve");
 }
