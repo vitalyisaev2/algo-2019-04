@@ -25,34 +25,30 @@ find_package(Catch2 2.7 REQUIRED)
 find_package(benchmark REQUIRED)
 
 # сборка бинарника с тестами
-file(GLOB tests_main_src "*test.cpp")
-file(GLOB_RECURSE tests_full_src 
+file(GLOB_RECURSE test_full_src 
+  ${PROJECT_SOURCE_DIR}/test/*.cpp
   ${PROJECT_SOURCE_DIR}/02_data_structures/*.cpp
   ${PROJECT_SOURCE_DIR}/04_algebraic/*.cpp
   ${PROJECT_SOURCE_DIR}/05_sort/*.cpp
   ${PROJECT_SOURCE_DIR}/06_sort/*.cpp
 )
-list(APPEND tests_full_src ${tests_main_src})
-list(FILTER tests_full_src EXCLUDE REGEX ".*bench.cpp$")
-SUBDIRLIST(tests_include "${PROJECT_SOURCE_DIR}")
-add_executable(tests "${tests_full_src}")
-target_include_directories(tests PRIVATE "${tests_include}")
+SUBDIRLIST(test_include "${PROJECT_SOURCE_DIR}")
+add_executable(tests "${test_full_src}")
+target_include_directories(tests PRIVATE "${test_include}")
 target_link_libraries(tests Catch2::Catch2)
 
 # сборка бинарника с бенчмарками
-file(GLOB_RECURSE bench_main_src "*bench.cpp")
 file(GLOB_RECURSE bench_full_src 
+  ${PROJECT_SOURCE_DIR}/bench/*.cpp
   ${PROJECT_SOURCE_DIR}/02_data_structures/*.cpp
   ${PROJECT_SOURCE_DIR}/04_algebraic/*.cpp
   ${PROJECT_SOURCE_DIR}/05_sort/*.cpp
   ${PROJECT_SOURCE_DIR}/06_sort/*.cpp
 )
-list(APPEND bench_full_src ${bench_main_src})
-list(FILTER bench_full_src EXCLUDE REGEX ".*test.cpp$")
 SUBDIRLIST(bench_include "${PROJECT_SOURCE_DIR}")
-add_executable(benchmarks "${bench_full_src}")
-target_include_directories(benchmarks PRIVATE "${bench_include}")
-target_link_libraries(benchmarks benchmark::benchmark)
+add_executable(bench "${bench_full_src}")
+target_include_directories(bench PRIVATE "${bench_include}")
+target_link_libraries(bench benchmark::benchmark)
 
 # запуск тестов
 include(CTest)
@@ -62,5 +58,5 @@ catch_discover_tests(tests)
 # запуск тестов с проверкой памяти
 find_program(VALGRIND "valgrind")
 add_test(
-    tests_valgrind
+    test_valgrind
     "${VALGRIND}" --error-exitcode=1 --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --run-libc-freeres=no "${CMAKE_CURRENT_BINARY_DIR}/tests")

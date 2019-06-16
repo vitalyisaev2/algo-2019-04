@@ -12,7 +12,7 @@ pandas.set_option('display.width', 1000)
 
 
 def extractMethodName(name):
-    return name.split("_")[2].split("<")[0]
+    return name.split("_")[1].split("<")[0]
 
 
 def extractType(name):

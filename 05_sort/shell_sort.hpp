@@ -111,8 +111,9 @@ namespace algo
                 // числа последовательности выще k=8 не определены, но, согласно Википедии,
                 // их можно доопределить с помощью рекурентного соотношения
                 if (n > 2 * gaps.back()) {
+                    size_t gap = gaps.back();
                     while (true) {
-                        size_t gap = static_cast<size_t>(float(gap) * 2.25);
+                        gap = static_cast<size_t>(float(gap) * 2.25);
                         if (n < 2 * gap) {
                             break;
                         }
