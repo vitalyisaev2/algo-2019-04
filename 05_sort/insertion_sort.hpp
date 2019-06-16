@@ -1,8 +1,6 @@
 #ifndef INSERTION_SORT_HPP
 #define INSERTION_SORT_HPP
 
-#include "common.hpp"
-
 namespace algo
 {
 
