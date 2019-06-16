@@ -1,6 +1,8 @@
 #include "insertion_sort.hpp"
 #include "sequence_generator.hpp"
 #include "shell_sort.hpp"
+#include "heap_sort.hpp"
+#include "merge_sort.hpp"
 #include <catch2/catch.hpp>
 
 TEST_CASE("sort")
@@ -58,4 +60,6 @@ TEST_CASE("sort")
     section(shellSortFactory.Get<int>(algo::ShellSortFactory::Sequence::Shell), "shell sort (Shell sequence)");
     section(shellSortFactory.Get<int>(algo::ShellSortFactory::Sequence::Sedgewick), "shell sort (Sedgewick sequence)");
     section(shellSortFactory.Get<int>(algo::ShellSortFactory::Sequence::Ciura), "shell sort (Ciura sequence)");
+    section(algo::HeapSort<int>, "heap sort");
+    section(algo::MergeSort<int>, "merge sort");
 }

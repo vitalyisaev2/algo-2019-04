@@ -59,4 +59,4 @@ catch_discover_tests(tests)
 find_program(VALGRIND "valgrind")
 add_test(
     test_valgrind
-    "${VALGRIND}" --error-exitcode=1 --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --run-libc-freeres=no "${CMAKE_CURRENT_BINARY_DIR}/test")
+    "${VALGRIND}" --error-exitcode=1 --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --run-libc-freeres=no "${CMAKE_CURRENT_BINARY_DIR}/tests")

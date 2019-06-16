@@ -27,11 +27,4 @@ TEST_CASE("Heap")
         std::vector<int> expected({11, 9, 11, 8, 6, 10, 0, 3, 5, 4, 2, 1, 7});
         REQUIRE(input == expected);
     }
-
-    SECTION("Sort") {
-        std::vector<int> input({10, 9, 7, 8, 6, 1, 0, 3, 5, 4, 2});
-        algo::HeapSort(input);
-        std::vector<int> expected({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-        REQUIRE(input == expected);
-    }
 }
