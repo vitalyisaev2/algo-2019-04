@@ -2,7 +2,6 @@
 
 import pandas
 import json
-import matplotlib.pyplot as plt
 
 fname = "./build/result.json"
 
@@ -67,7 +66,7 @@ def renderDataFrame(df, method_name):
     pivot = df[df["method"] == method_name].pivot(
         index="n", columns="type", values="cpu_time")
     print(pivot)
-    axes = pivot.plot(kind="line", title="DynamicArray.{}".format(
+    axes = pivot.plot(kind="line", title="Sort.{}".format(
         method_name), logx=True, logy=True)
     axes.set_ylabel("nanoseconds")
     lgd = axes.legend(loc='center right', bbox_to_anchor=(1.5, 0.5))
