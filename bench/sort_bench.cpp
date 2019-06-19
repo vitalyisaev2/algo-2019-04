@@ -5,6 +5,7 @@
 #include "sequence_generator.hpp"
 #include "shell_sort.hpp"
 #include "quick_sort.hpp"
+#include "counting_sort.hpp"
 #include <benchmark/benchmark.h>
 
 utils::SequenceGenerator<long> generator;
@@ -94,6 +95,13 @@ class QuickSort
     algo::SortFunc<T> f = algo::QuickSort<T>;
 };
 
+template <typename T>
+class CountingSort
+{
+  public:
+    algo::SortFunc<T> f = algo::CountingSort<T>;
+};
+
 // Hw05
 BENCHMARK_TEMPLATE(BM_SortShuffled100Percent, InsertionSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
 BENCHMARK_TEMPLATE(BM_SortShuffled10Percent, InsertionSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
@@ -120,3 +128,8 @@ BENCHMARK_TEMPLATE(BM_SortShuffled5Items, MergeSort<long>)->RangeMultiplier(2)->
 BENCHMARK_TEMPLATE(BM_SortShuffled100Percent, QuickSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
 BENCHMARK_TEMPLATE(BM_SortShuffled10Percent, QuickSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
 BENCHMARK_TEMPLATE(BM_SortShuffled5Items, QuickSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
+
+// HW08
+BENCHMARK_TEMPLATE(BM_SortShuffled100Percent, CountingSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
+BENCHMARK_TEMPLATE(BM_SortShuffled10Percent, CountingSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
+BENCHMARK_TEMPLATE(BM_SortShuffled5Items, CountingSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
