@@ -4,6 +4,7 @@
 #include "insertion_sort.hpp"
 #include "merge_sort.hpp"
 #include "quick_sort.hpp"
+#include "radix_sort.hpp"
 #include "sequence_generator.hpp"
 #include "shell_sort.hpp"
 #include <catch2/catch.hpp>
@@ -47,14 +48,14 @@ TEST_CASE("sort")
             }
             SECTION("sorted sequence")
             {
-                auto             input = sequenceGenerator.GetSequence(32, utils::SequenceGenerator<int>::Sorted);
+                auto             input = sequenceGenerator.GetSequence(32, 32, utils::SequenceGenerator<int>::Sorted);
                 std::vector<int> expected(input);
                 f(input);
                 REQUIRE(input == expected);
             }
             SECTION("reverse sorted sequence")
             {
-                std::vector<int> input(sequenceGenerator.GetSequence(32, utils::SequenceGenerator<int>::ReverseSorted));
+                std::vector<int> input(sequenceGenerator.GetSequence(32, 32, utils::SequenceGenerator<int>::ReverseSorted));
                 std::vector<int> expected(input.size());
                 std::reverse_copy(input.begin(), input.end(), expected.begin());
                 f(input);
@@ -63,7 +64,7 @@ TEST_CASE("sort")
 
             SECTION("shuffled sequence")
             {
-                std::vector<int> input(sequenceGenerator.GetSequence(32, utils::SequenceGenerator<int>::Shuffled100Percent));
+                std::vector<int> input(sequenceGenerator.GetSequence(32, 32, utils::SequenceGenerator<int>::Shuffled100Percent));
                 std::vector<int> expected(input.size());
                 std::copy(input.begin(), input.end(), expected.begin());
                 std::sort(expected.begin(), expected.end());
@@ -89,4 +90,5 @@ TEST_CASE("sort")
     section(algo::MergeSort<int>, "merge sort");
     section(algo::QuickSort<int>, "quick sort");
     section(algo::CountingSort<int>, "counting sort");
+    section(algo::RadixSort<int>, "radix sort");
 }
