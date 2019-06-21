@@ -83,7 +83,7 @@ TEST_CASE("sort")
 
     section(algo::InsertionSort<int>, "insertion sort");
     section(shellSortFactory.Get<int>(algo::ShellSortFactory::Sequence::Shell), "shell sort (Shell sequence)");
-    // section(shellSortFactory.Get<int>(algo::ShellSortFactory::Sequence::Sedgewick), "shell sort (Sedgewick sequence)"); что-то сломалось
+    section(shellSortFactory.Get<int>(algo::ShellSortFactory::Sequence::Sedgewick), "shell sort (Sedgewick sequence)");
     section(shellSortFactory.Get<int>(algo::ShellSortFactory::Sequence::Ciura), "shell sort (Ciura sequence)");
     section(algo::HeapSort<int>, "heap sort");
     section(algo::MergeSort<int>, "merge sort");
