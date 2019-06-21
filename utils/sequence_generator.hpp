@@ -88,6 +88,6 @@ namespace utils
         std::mt19937                                                  generator;
     };
 
-} // namespace utils
+} // namespace algo
 
 #endif

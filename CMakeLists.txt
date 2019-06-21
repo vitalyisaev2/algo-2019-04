@@ -32,7 +32,8 @@ file(GLOB_RECURSE test_full_src
   ${PROJECT_SOURCE_DIR}/05_sort/*.cpp
   ${PROJECT_SOURCE_DIR}/06_sort/*.cpp
 )
-SUBDIRLIST(test_include "${PROJECT_SOURCE_DIR}")
+SUBDIRLIST(test_include "${PROJECT_SOURCE_DIR}" )
+list(APPEND test_include "${PROJECT_SOURCE_DIR}/utils")
 add_executable(tests "${test_full_src}")
 target_include_directories(tests PRIVATE "${test_include}")
 target_link_libraries(tests Catch2::Catch2)
@@ -46,6 +47,7 @@ file(GLOB_RECURSE bench_full_src
   ${PROJECT_SOURCE_DIR}/06_sort/*.cpp
 )
 SUBDIRLIST(bench_include "${PROJECT_SOURCE_DIR}")
+list(APPEND bench_include "${PROJECT_SOURCE_DIR}/utils")
 add_executable(bench "${bench_full_src}")
 target_include_directories(bench PRIVATE "${bench_include}")
 target_link_libraries(bench benchmark::benchmark)
