@@ -2,7 +2,6 @@
 #define SHELL_SORT_HPP
 
 #include "algebraic.hpp"
-#include <iostream>
 
 namespace algo
 {
@@ -78,7 +77,7 @@ namespace algo
           public:
             SedgewickSequence(size_t n)
             {
-                for (size_t k = 1, gap = 1; gap < n / 2; k++) {
+                for (size_t k = 1, gap = 1; gap <= n / 2; k++) {
                     gaps.push_back(gap);
                     // 4^k + 3*2^(k-1) + 1
                     gap = algo::PowerViaExponentBinaryPartition_fast<size_t>(4, k) +

@@ -22,26 +22,20 @@ namespace utils
             Shuffled5Items     = 4,
         };
 
-        std::vector<T> GetSequence(size_t n, Kind kind)
+        // возвращаем последовательность случайных значений длиной N, равномерно распределённых от O до k
+        const std::vector<T>& GetSequence(size_t n, T k, Kind kind)
         {
-            std::vector<T> result;
-            if (sequences.contains(n)) {
-                auto size_sequences = sequences[n];
-                if (size_sequences.contains(kind)) {
-                    // отдать кешированное значение
-                    result = size_sequences[kind];
-                } else {
-                    // сгенерировать последовательность и сохранить её в кеше
-                    result             = make_sequence(n, kind);
-                    sequences[n][kind] = result;
-                }
-            } else {
-                result             = make_sequence(n, kind);
-                sequences[n][kind] = result;
+            if (!sequences.contains(n)) {
+                sequences[n] = std::map<T, std::map<Kind, std::vector<T>>>();
+            }
+            if (!sequences[n].contains(k)) {
+                sequences[n][k] = std::map<Kind, std::vector<T>>();
+            }
+            if (!sequences[n][k].contains(kind)) {
+                sequences[n][k][kind] = make_sequence(n, k, kind);
             }
 
-            // копируем массив, чтобы клиент мог изменять копию
-            return result;
+            return sequences[n][k][kind];
         }
 
       private:
@@ -52,7 +46,7 @@ namespace utils
             return v;
         };
 
-        std::vector<T> make_sequence(size_t n, Kind kind)
+        std::vector<T> make_sequence(size_t n, T k, Kind kind)
         {
             auto                                  v = make_sorted_sequence(n);
             std::uniform_int_distribution<size_t> dist(0, n - 1);
@@ -81,16 +75,17 @@ namespace utils
                 }
                 break;
             default:
-                throw "unknow sequence kind";
+                throw "unknown sequence kind";
                 break;
             }
             return v;
         }
 
-        std::map<size_t, std::map<int, std::vector<T>>> sequences;
-        std::mt19937                                    generator;
+        // размер последовательности -> верхняя планка равномерного распределения -> тип последовательности -> последовательность
+        std::map<size_t, std::map<T, std::map<Kind, std::vector<T>>>> sequences;
+        std::mt19937                                                  generator;
     };
 
-} // namespace utils
+} // namespace algo
 
 #endif
