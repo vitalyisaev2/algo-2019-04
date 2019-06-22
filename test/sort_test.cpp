@@ -9,7 +9,7 @@
 #include "shell_sort.hpp"
 #include <catch2/catch.hpp>
 
-TEST_CASE("sort")
+TEST_CASE("Sort")
 {
 
     utils::SequenceGenerator<int> sequenceGenerator;
