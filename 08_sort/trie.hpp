@@ -60,12 +60,12 @@ namespace algo
             }
 
             // если у дочернего узла нет своих детей, значит, узел удаляется
-            auto child = children[value];
-            if (std::distance(begin, end) == 1 && children->children.size() == 0) {
+            if (std::distance(begin, end) == 1 && children[value]->children.size() == 0) {
                 children.erase(value);
+                return;
             }
 
-            return child.Remove(++begin, end);
+            children[value]->Remove(++begin, end);
         }
 
       private:
