@@ -23,10 +23,8 @@ namespace utils
         };
 
         // возвращаем последовательность случайных значений длиной N, равномерно распределённых от O до k
-        std::vector<T> GetSequence(size_t n, T k, Kind kind)
+        const std::vector<T>& GetSequence(size_t n, T k, Kind kind)
         {
-            std::vector<T> result;
-
             if (!sequences.contains(n)) {
                 sequences[n] = std::map<T, std::map<Kind, std::vector<T>>>();
             }

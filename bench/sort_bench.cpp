@@ -28,22 +28,6 @@ static void sortArrayProportionalDistribution(utils::SequenceGenerator<long>::Ki
     state.SetComplexityN(state.range(0));
 }
 
-// sortArrayLimitedDistribution - сортировка массива, в котором диапазон данных ограничен [0; k)
-template <typename Sorter>
-static void sortArrayLimitedDistribution(utils::SequenceGenerator<long>::Kind kind, long k, benchmark::State& state)
-{
-    Sorter s;
-    auto   n = static_cast<size_t>(state.range(0));
-    for (auto _ : state) {
-        state.PauseTiming();
-        auto f   = s.f;
-        auto seq = generator.GetSequence(n, k, kind);
-        state.ResumeTiming();
-        f(seq);
-    }
-    state.SetComplexityN(state.range(0));
-}
-
 template <typename T>
 void BM_SortShuffled100Percent_PD(benchmark::State& state)
 {
@@ -60,26 +44,6 @@ template <typename T>
 void BM_SortShuffled5Items_PD(benchmark::State& state)
 {
     sortArrayProportionalDistribution<T>(utils::SequenceGenerator<long>::Kind::Shuffled5Items, state);
-}
-
-const long limit = 1024;
-
-template <typename T>
-void BM_SortShuffled100Percent_LD(benchmark::State& state)
-{
-    sortArrayLimitedDistribution<T>(utils::SequenceGenerator<long>::Kind::Shuffled100Percent, limit, state);
-}
-
-template <typename T>
-void BM_SortShuffled10Percent_LD(benchmark::State& state)
-{
-    sortArrayLimitedDistribution<T>(utils::SequenceGenerator<long>::Kind::Shuffled10Percent, limit, state);
-}
-
-template <typename T>
-void BM_SortShuffled5Items_LD(benchmark::State& state)
-{
-    sortArrayLimitedDistribution<T>(utils::SequenceGenerator<long>::Kind::Shuffled5Items, limit, state);
 }
 
 // классы-контейнеры для функций сортировки
@@ -178,9 +142,9 @@ BENCHMARK_TEMPLATE(BM_SortShuffled10Percent_PD, QuickSort<long>)->RangeMultiplie
 BENCHMARK_TEMPLATE(BM_SortShuffled5Items_PD, QuickSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
 
 // HW08
-BENCHMARK_TEMPLATE(BM_SortShuffled100Percent_LD, CountingSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
-BENCHMARK_TEMPLATE(BM_SortShuffled10Percent_LD, CountingSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
-BENCHMARK_TEMPLATE(BM_SortShuffled5Items_LD, CountingSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
-BENCHMARK_TEMPLATE(BM_SortShuffled100Percent_LD, RadixSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
-BENCHMARK_TEMPLATE(BM_SortShuffled10Percent_LD, RadixSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
-BENCHMARK_TEMPLATE(BM_SortShuffled5Items_LD, RadixSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
+BENCHMARK_TEMPLATE(BM_SortShuffled100Percent_PD, CountingSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
+BENCHMARK_TEMPLATE(BM_SortShuffled10Percent_PD, CountingSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
+BENCHMARK_TEMPLATE(BM_SortShuffled5Items_PD, CountingSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
+BENCHMARK_TEMPLATE(BM_SortShuffled100Percent_PD, RadixSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
+BENCHMARK_TEMPLATE(BM_SortShuffled10Percent_PD, RadixSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
+BENCHMARK_TEMPLATE(BM_SortShuffled5Items_PD, RadixSort<long>)->RangeMultiplier(2)->Range(1 << 1, 1 << 16)->Complexity();
