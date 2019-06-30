@@ -5,79 +5,111 @@
 
 namespace algo
 {
-    // простой вариант бинарного дерева, пишу просто для тренировки
+    // простой вариант бинарного дерева, написал просто для тренировки
     template <typename Key, typename Value>
     class UnbalancedBinaryTree : public BinaryTree<Key, Value>
     {
       public:
-        UnbalancedBinaryTree() : root(nullptr) {}
+        UnbalancedBinaryTree() : _root(nullptr), _size(0) {}
 
         ~UnbalancedBinaryTree()
         {
-            if (root != nullptr) {
-                delete root;
+            if (_root != nullptr) {
+                delete _root;
             }
         }
 
         void Insert(const Key& key, const Value& value) override
         {
-            if (root == nullptr) {
-                root = new Node(key, value);
+            if (_root == nullptr) {
+                _root = new Node(key, value);
+                _size++;
                 return;
             }
 
-            root->Insert(key, value);
+            if (_root->Insert(key, value)) {
+                _size++;
+            };
             return;
+        }
+
+        bool Contains(const Key& key) const override
+        {
+            if (_root == nullptr) {
+                return false;
+            }
+            return _root->Contains(key);
+        }
+
+        size_t Size() const override
+        {
+            return _size;
         }
 
       private:
         class Node
         {
           public:
-            Node(const Key& key, const Value& value) : _key(key), _value(value), _left(nullptr), _right(nullptr) : {};
+            Node(const Key& key, const Value& value) : _key(key), _value(value), _left(nullptr), _right(nullptr){};
 
             ~Node()
             {
-                if (left != nullptr) {
-                    delete left;
+                if (_left != nullptr) {
+                    delete _left;
                 }
-                if (right != nullptr) {
-                    delete right;
+                if (_right != nullptr) {
+                    delete _right;
                 }
             }
 
-            SetLeft(Node* node)
+            void SetLeft(Node* node)
             {
-                left = node;
+                _left = node;
             }
 
-            SetRight(Node* node)
+            void SetRight(Node* node)
             {
-                right = node;
+                _right = node;
             }
 
-            Insert(const Key& key, const Value& value)
+            // Возвращаемое значение указывает на то, был ли создан новый узел дерева
+            bool Insert(const Key& key, const Value& value)
             {
                 if (key == _key) {
                     _value = value;
-                    return;
+                    return false;
                 }
 
                 if (key > _key) {
                     if (_right == nullptr) {
                         _right = new Node(key, value);
-                        return;
+                        return true;
                     }
-                    _right->Insert(key, value);
-                    return;
+                    return _right->Insert(key, value);
                 }
 
                 if (_left == nullptr) {
                     _left = new Node(key, value);
-                    return;
+                    return true;
                 }
-                _left->Insert(key, value);
-                return;
+                return _left->Insert(key, value);
+            }
+
+            bool Contains(const Key& key) const
+            {
+                if (_key == key) {
+                    return true;
+                }
+
+                if (key > _key && _right != nullptr) {
+                    return _right->Contains(key);
+                }
+
+                if (key < _key && _left != nullptr) {
+                    return _left->Contains(key);
+                }
+
+                return false;
             }
 
           private:
@@ -85,9 +117,10 @@ namespace algo
             Value _value;
             Node* _left;
             Node* _right;
-        }
+        };
 
-        Node* root;
+        Node*  _root;
+        size_t _size;
     };
 } // namespace algo
 
